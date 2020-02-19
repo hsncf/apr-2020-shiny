@@ -207,8 +207,7 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
 
 
 server <- function(input, output) {
-   # Comment out the questions that are breaking input, may need to add back in 
-   #with an error checking function 
+   
    allQuestions <- reactive({
       td <- tempdir()
       unzip(input$aprZip$datapath, exdir=td, overwrite=TRUE)
@@ -216,6 +215,8 @@ server <- function(input, output) {
       #myList <- lapply(Sys.glob("Q*.csv"), read.csv)
       #setNames(myList, Sys.glob("Q*.csv"))
       nextTry <- list(
+         # Comment out the questions that are breaking input, may need to add back in 
+         # with an error checking function 
          q4a=read.csv("Q4a.csv",header=TRUE,stringsAsFactors = FALSE),
          q5a=read.csv("Q5a.csv",header=TRUE,stringsAsFactors = FALSE),
          q6a=read.csv("Q6a.csv",header=TRUE,stringsAsFactors = FALSE),
