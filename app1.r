@@ -2,10 +2,10 @@
 # this looks promising to read in all of the csv files
 #dataFiles <- lapply(Sys.glob("data*.csv"), read.csv)
 #rsconnect::deployApp(appName="interactive-apr")
-#0019A8 
+#0019A8
 #0947B2
-#00629B 
-#09A0B2 
+#00629B
+#09A0B2
 #08A88D
 library(shiny)
 library(shinythemes)
@@ -48,7 +48,7 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                                          h3(textOutput("dq")),
                                          column(4,gaugeOutput("piigauge")),
                                          column(8,plotlyOutput("piiPlot")),
-                                         
+
                                          tags$br(),
                                          dataTableOutput("PIITable")),
                                 tabPanel("Income and Housing",
@@ -163,7 +163,7 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                                          plotOutput("benefitEntry"),
                                          plotOutput("insStatus"),
                                          plotOutput("healthIns")
-                                         
+
                                 ),
                                 tabPanel("Length of Participation",
                                          tags$h3("Length of Participation in Project"),
@@ -179,12 +179,12 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                                          tags$h2(textOutput("names_exit"),style="color: #09A0B2"),
                                          tags$h4(textOutput("type_exit"))
                                 )
-                                
+
                              )
                           )
                  ),
-                 
-                 
+
+
                  tabPanel(title = "About",
                           tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
                           tags$h3("About the Annual Performance Report"),
@@ -207,7 +207,7 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
 
 
 server <- function(input, output) {
-   
+
    allQuestions <- reactive({
       td <- tempdir()
       unzip(input$aprZip$datapath, exdir=td, overwrite=TRUE)
@@ -249,14 +249,14 @@ server <- function(input, output) {
          q18=read.csv("Q18.csv",header=TRUE,stringsAsFactors = FALSE),
          q19a1=read.csv("Q19a1.csv",header=TRUE,stringsAsFactors = FALSE),
          q19a2=read.csv("Q19a2.csv",header=TRUE,stringsAsFactors = FALSE),
-         q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
+         # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
          q20a=read.csv("Q20a.csv",header=TRUE,stringsAsFactors = FALSE),
          q20b=read.csv("Q20b.csv",header=TRUE,stringsAsFactors = FALSE),
          q21=read.csv("Q21.csv",header=TRUE,stringsAsFactors = FALSE),
          q22a1=read.csv("Q22a1.csv",header=TRUE,stringsAsFactors = FALSE),
          q22b=read.csv("Q22b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
+         # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
+         # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
          q25a=read.csv("Q25a.csv",header=TRUE,stringsAsFactors = FALSE),
          q25b=read.csv("Q25b.csv",header=TRUE,stringsAsFactors = FALSE),
          q25c=read.csv("Q25c.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -288,13 +288,13 @@ server <- function(input, output) {
    })
    #output$print <- renderPrint({
    #inFile <- input$aprZip
-   
+
    #if(is.null(inFile))
    #return(NULL)
-   
+
    #print(allQuestions()["q11"])
    # })
-   
+
    output$print2 <- renderTable({
       if(is.null(input$aprZip))
          return(NULL)
@@ -349,11 +349,11 @@ server <- function(input, output) {
    # output$genderKidPlot <-renderPlot({
    #   if(is.null(input$aprZip))
    #     return(NULL)
-   #   bp<-barplot(allQuestions()[["q10b"]]$Total[1:7], main="Genders of Children", 
+   #   bp<-barplot(allQuestions()[["q10b"]]$Total[1:7], main="Genders of Children",
    #           names.arg=c("Male","Female","Trans Female","Trans Male","Non-Binary","DK/R","Missing"),ylab="Number of Clients",col="#08A88D")
    #   text(bp,0,allQuestions()[["q10b"]]$Total[1:7],cex=1,pos=3)
    # })
-   
+
    output$livSitPlot <- renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
@@ -529,7 +529,7 @@ server <- function(input, output) {
       if(is.null(input$aprZip))
          return("For more information, navigate to the 'About' tab")
       paste("Adults gaining or maintaining earned income:", sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[1]/allQuestions()[["q19a3"]][1,8]))
-      
+
    })
    output$incSummary2 <- renderText({
       if(is.null(input$aprZip))
@@ -543,13 +543,13 @@ server <- function(input, output) {
       totalPersons <- allQuestions()[["q7a"]][5,2]
       stayers <- allQuestions()[["q5a"]][8,1]
       excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
-      goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2] 
+      goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
       posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
       posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
       if(projType==3)
          return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
       paste("Clients exiting to permanent destinations:",posDestPer)
-      
+
    })
    output$destPos2 <- renderText({
       if(is.null(input$aprZip))
@@ -558,7 +558,7 @@ server <- function(input, output) {
       totalPersons <- allQuestions()[["q7a"]][5,2]
       stayers <- allQuestions()[["q5a"]][8,1]
       excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
-      goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2] 
+      goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
       posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
       posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
       if(projType==3)
@@ -591,7 +591,7 @@ server <- function(input, output) {
          layout(title="Point in Time Counts on the Last Wednesday",
                 xaxis=list(title="Month"),
                 yaxis=list(title="Count"))
-      
+
       # heading <- "Point-In-Time Count of Persons"
       # xlabel <- "Month (May not be chronological)"
       # ylabel <- "Total Persons"
@@ -680,16 +680,16 @@ server <- function(input, output) {
          )
       }
    )
-   
+
    ######## HSN APPROVED METRICS ############
-   
+
    output$served <- renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
       plot_ly(x=c("Client Exited", "Clients Stayers"),y=allQuestions()[["q5a"]][c(5,8),1],name="Clients Served",type='bar')%>%
          layout(xaxis = list(title = ""),
                 yaxis = list(title ="Client Count"))
-      
+
    })
    output$chronic <- renderPlotly({
       if(is.null(input$aprZip))
@@ -939,10 +939,10 @@ server <- function(input, output) {
                                  warning=c(0.3,0.5),
                                  danger=c(0.5,1)))
    })
-   
-   
-   
-   
+
+
+
+
 }
 
 shinyApp(ui = ui, server = server)
