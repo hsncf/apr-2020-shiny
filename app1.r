@@ -7,6 +7,12 @@
 #00629B 
 #09A0B2 
 #08A88D
+
+
+# present_in_old_missing_in_new <- c("Q19a3","Q23a","Q23b" )
+# missing_in_old_present_in_new <- c("Q19b", "Q22e", "Q23c", "Q27g" ,"Q27h", "Q27i")
+
+
 library(shiny)
 library(shinythemes)
 library(DT)
@@ -217,6 +223,9 @@ server <- function(input, output) {
       nextTry <- list(
          # Comment out the questions that are breaking input, may need to add back in 
          # with an error checking function 
+         # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
+         # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
+         # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
          q4a=read.csv("Q4a.csv",header=TRUE,stringsAsFactors = FALSE),
          q5a=read.csv("Q5a.csv",header=TRUE,stringsAsFactors = FALSE),
          q6a=read.csv("Q6a.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -284,7 +293,7 @@ server <- function(input, output) {
          q27f=read.csv("Q27f.csv",header=TRUE,stringsAsFactors = FALSE)
       )
       #print("it worked")
-      projName <- as.character(nextTry[["q4a"]][2,2])
+      projName <- as.character(nextTry[["q4a"]][1,3])
       print(projName)
       nextTry
    })
@@ -410,7 +419,7 @@ server <- function(input, output) {
    output$names <- renderText({
       if(is.null(input$aprZip))
          return("Select an APR to Begin")
-      as.character(allQuestions()[["q4a"]][2,2])
+      as.character(allQuestions()[["q4a"]][1,3])
    })
    output$names_exit <- renderText({
       if(is.null(input$aprZip))
