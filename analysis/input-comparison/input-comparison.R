@@ -40,11 +40,56 @@ allQuestions_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
 
 names(all)
 
+allQuestions_old %>% purrr::map(row.names)
+allQuestions_new %>% purrr::map(row.names)
+
+
+allQuestions_old[["q5a"]] %>% row.names()
+
+
 #
 # inspect individual questions
-focal_name <- "q12b"
+focal_name <- "q15"
 print(focal_name)
 View(allQuestions_old[[focal_name]]); View(allQuestions_new[[focal_name]])
+
+items_header_false <- c("q5a")
+
+# ---- q4a -------------------
+# Project Name
+allQuestions_old[["q4a"]][2,2]
+allQuestions_new[["q4a"]][1,3]
+
+# Project Type
+
+allQuestions_old[["q4a"]][4,2]
+allQuestions_new[["q4a"]][1,"HMIS.Project.Type"]
+
+allQuestions_old[["q15"]][7,2]
+allQuestions_new[["q15"]][7,2]
+
+d1 <-allQuestions_new[["q15"]] %>% select(X) %>% mutate(Xold = X)
+d2 <- allQuestions_old[["q15"]] %>% select(X)
+
+setdiff(allQuestions_new[["q15"]] %>% select(X),allQuestions_old[["q15"]] %>% select(X))
+
+d3 <- dplyr::left_join(d2, d1)
+dplyr::left_join(allQuestions_old[["q15"]] %>% select(X))
+
+
+
+# ----- --------------------
+adults <- allQuestions_old[["q7a"]][1,2]
+children <- allQuestions_old[["q7a"]][2,2]
+childHoH <- allQuestions_old[["q5a"]][15,2]
+paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions_old[["q15"]][7,2]/(adults+childHoH)))
+
+adults <- allQuestions_new[["q7a"]][1,2]
+children <- allQuestions_new[["q7a"]][2,2]
+childHoH <- allQuestions_new[["q5a"]][15,1]
+paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions_new[["q15"]][7,2]/(adults+childHoH)))
+
+
 
 # ---- q11a -------------------
 
