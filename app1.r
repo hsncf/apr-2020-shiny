@@ -6,7 +6,7 @@
 #0947B2
 #00629B 
 #09A0B2 
-#08A88D
+
 
 
 # present_in_old_missing_in_new <- c("Q19a3","Q23a","Q23b" )
@@ -54,7 +54,6 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                                          h3(textOutput("dq")),
                                          column(4,gaugeOutput("piigauge")),
                                          column(8,plotlyOutput("piiPlot")),
-                                         
                                          tags$br(),
                                          dataTableOutput("PIITable")),
                                 tabPanel("Income and Housing",
@@ -169,7 +168,6 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                                          plotOutput("benefitEntry"),
                                          plotOutput("insStatus"),
                                          plotOutput("healthIns")
-                                         
                                 ),
                                 tabPanel("Length of Participation",
                                          tags$h3("Length of Participation in Project"),
@@ -185,12 +183,13 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                                          tags$h2(textOutput("names_exit"),style="color: #09A0B2"),
                                          tags$h4(textOutput("type_exit"))
                                 )
-                                
+                              
                              )
                           )
                  ),
                  
                  
+
                  tabPanel(title = "About",
                           tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
                           tags$h3("About the Annual Performance Report"),
@@ -205,15 +204,7 @@ ui <- navbarPage(title = "Explore your Annual Performance Report",
                  )
 )
 
-
-
-
-
-
-
-
 server <- function(input, output) {
-   
    allQuestions <- reactive({
       td <- tempdir()
       unzip(input$aprZip$datapath, exdir=td, overwrite=TRUE)
@@ -221,6 +212,7 @@ server <- function(input, output) {
       #myList <- lapply(Sys.glob("Q*.csv"), read.csv)
       #setNames(myList, Sys.glob("Q*.csv"))
       nextTry <- list(
+
          # Comment out the questions that are breaking input, may need to add back in 
          # with an error checking function 
          # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -299,13 +291,12 @@ server <- function(input, output) {
    })
    #output$print <- renderPrint({
    #inFile <- input$aprZip
-   
    #if(is.null(inFile))
    #return(NULL)
    
    #print(allQuestions()["q11"])
    # })
-   
+
    output$print2 <- renderTable({
       if(is.null(input$aprZip))
          return(NULL)
@@ -540,7 +531,6 @@ server <- function(input, output) {
       if(is.null(input$aprZip))
          return("For more information, navigate to the 'About' tab")
       paste("Adults gaining or maintaining earned income:", sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[1]/allQuestions()[["q19a3"]][1,8]))
-      
    })
    output$incSummary2 <- renderText({
       if(is.null(input$aprZip))
@@ -560,7 +550,6 @@ server <- function(input, output) {
       if(projType==3)
          return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
       paste("Clients exiting to permanent destinations:",posDestPer)
-      
    })
    output$destPos2 <- renderText({
       if(is.null(input$aprZip))
@@ -602,7 +591,6 @@ server <- function(input, output) {
          layout(title="Point in Time Counts on the Last Wednesday",
                 xaxis=list(title="Month"),
                 yaxis=list(title="Count"))
-      
       # heading <- "Point-In-Time Count of Persons"
       # xlabel <- "Month (May not be chronological)"
       # ylabel <- "Total Persons"
@@ -691,16 +679,15 @@ server <- function(input, output) {
          )
       }
    )
-   
+
    ######## HSN APPROVED METRICS ############
-   
+
    output$served <- renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
       plot_ly(x=c("Client Exited", "Clients Stayers"),y=allQuestions()[["q5a"]][c(5,8),1],name="Clients Served",type='bar')%>%
          layout(xaxis = list(title = ""),
                 yaxis = list(title ="Client Count"))
-      
    })
    output$chronic <- renderPlotly({
       if(is.null(input$aprZip))
@@ -950,10 +937,6 @@ server <- function(input, output) {
                                  warning=c(0.3,0.5),
                                  danger=c(0.5,1)))
    })
-   
-   
-   
-   
 }
 
 shinyApp(ui = ui, server = server)
