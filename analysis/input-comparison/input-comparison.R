@@ -9,6 +9,7 @@ library(magrittr) # enables piping : %>%
 library(dplyr)    # data wrangling
 library(ggplot2)  # graphs
 library(tidyr)    # data tidying
+library(plotly)
 
 # ---- load-sources ---------------------------------------------------
 # Call `base::source()` on any repo file that defines functions needed below.
@@ -41,7 +42,7 @@ names(all)
 
 #
 # inspect individual questions
-focal_name <- "q12a"
+focal_name <- "q12b"
 print(focal_name)
 View(allQuestions_old[[focal_name]]); View(allQuestions_new[[focal_name]])
 
@@ -60,6 +61,14 @@ plot_ly(x=c(" White", " Black", "Asian", "Am. Indian","NHPI","Multiple","DK/R","
         y=allQuestions_new[["q12a"]]$Total[1:8],
         name='Race ',type='bar')%>%
   layout(xaxis = list(title = "Race"),
+         yaxis = list(title ="Client Count"))
+
+# ---- q12b -------------------
+plot_ly(x=c(" Non-Latino"," Hispanic/Latino","DK/R","Missing"),
+        # y=allQuestions_old[["q12b"]]$Total[1:4],
+        y=allQuestions_new[["q12b"]]$Total[1:4],
+        name="Ethnicity Distribution",type='bar')%>%
+  layout(xaxis = list(title = "Ethnicity"),
          yaxis = list(title ="Client Count"))
 
 
