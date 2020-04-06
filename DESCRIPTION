@@ -1,11 +1,11 @@
 Package: RAnalysisSkeleton
-Title: Displaying Health Data
+Title: HSN - ShinyApp for APR
 Description: Files and settings commonly used in analysis projects with R.
 Version: 0.0.1.9001
 Date: 2019-02-04
 Authors@R: c(person("Will", "Beasley", role = c("aut", "cre"), email =
     "wibeasley@hotmail.com", comment = c(ORCID = "0000-0002-5613-5006")),
-    person("Andrey", "Koval", role = "aut"))
+    person("Andriy", "Koval", role = "aut", email = "andriy.v.koval@ucf.edu"))
 URL: https://github.com/wibeasley/RAnalysisSkeleton
 BugReports: https://github.com/wibeasley/RAnalysisSkeleton/issues
 Depends:
