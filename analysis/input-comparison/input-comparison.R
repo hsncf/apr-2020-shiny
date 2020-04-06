@@ -18,29 +18,7 @@ library(tidyr)    # data tidying
 # ---- declare-globals --------------------------
 
 # ---- load-data -------------------------------
-#
-# compare_inputs <- functdion(path_folder_old, path_folder_new, item_name){
-#   path_folder_old    = "./data-unshared/raw/Sample-APR"
-#   path_folder_new  = "./data-unshared/raw/CSV-APR_2019"
-#   item_name        = "Q5a"
-#
-#   file_path_old <- list.files(path_folder_old, full.names = T) %>% sort()
-#   file_name_old <- file_path_old %>% basename() %>% stringr::str_replace(".csv","")
-#   names(file_path_old) <- file_name_old
-#   selected_item_old <- file_path_old[item_name]
-#
-#   file_path_new <- list.files(path_folder_new, full.names = T) %>% sort()
-#   file_name_new <- file_path_new %>% basename() %>% stringr::str_replace(".csv","")
-#   names(file_path_new) <- file_name_new
-#   selected_item_new <- file_path_new[item_name]
-#
-#
-#   old <- read.csv(selected_item_old, header=TRUE,stringsAsFactors = FALSE)
-#   new <- read.csv(selected_item_new, header=TRUE,stringsAsFactors = FALSE)
-#
-# }
-
-
+# function to load the questions from each source
 input_report_data <- function(path_folder){
   # path_folder = "./data-unshared/raw/CSV-APR_2019"
   # path_folder = "./data-unshared/raw/Sample-APR"
@@ -50,28 +28,42 @@ input_report_data <- function(path_folder){
   for(item_i in seq_along(path_files)){
     # item_i <- 1
     item_path <- path_files[item_i]
-    item_name <- item_path %>% basename() %>% stringr::str_replace(".csv","")
+    item_name <- item_path %>% basename() %>% stringr::str_replace(".csv","") %>% tolower()
     dto[[item_name]] <- read.csv(item_path,  header=TRUE,stringsAsFactors = FALSE)
   }
   return(dto)
 }
+# load both sources.
+allQuestions_old <- input_report_data("./data-unshared/raw/Sample-APR")
+allQuestions_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
 
-dto_old <- input_report_data("./data-unshared/raw/Sample-APR")
-dto_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
+names(all)
+
 #
-
-name_index <- 54
-names_old <- names(dto_old)
-focal_name <- names_old[name_index]
+# inspect individual questions
+focal_name <- "q12a"
 print(focal_name)
-View(dto_old[[focal_name]]); View(dto_new[[focal_name]])
+View(allQuestions_old[[focal_name]]); View(allQuestions_new[[focal_name]])
 
-# ls_old <- input_report_data("./data-unshared/raw/Sample-APR/")
-#
+# ---- q11a -------------------
+
+  plot_ly(x=c("  Under 5"," 5-12","13-17","18-24","25-34","35-44","45-54","55-61","62+"),
+          # y=allQuestions_old[["q11"]]$Total[1:9],
+          y=allQuestions_new[["q11"]]$Total[1:9],
+          name="Age Distribution",type='bar')%>%
+    layout(xaxis = list(title = "Age Range"),
+           yaxis = list(title ="Client Count"))
+
+# ---- q12a -------------------
+plot_ly(x=c(" White", " Black", "Asian", "Am. Indian","NHPI","Multiple","DK/R","Missing"),
+        # y=allQuestions_old[["q12a"]]$Total[1:8],
+        y=allQuestions_new[["q12a"]]$Total[1:8],
+        name='Race ',type='bar')%>%
+  layout(xaxis = list(title = "Race"),
+         yaxis = list(title ="Client Count"))
 
 
-
-
+# ---- q-list -------------
   # Comment out the questions that are breaking input, may need to add back in
   # with an error checking function
   # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
