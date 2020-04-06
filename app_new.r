@@ -219,7 +219,7 @@ server <- function(input, output) {
          # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
          # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
          q4a=read.csv("Q4a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q5a=read.csv("Q5a.csv",header=TRUE,stringsAsFactors = FALSE),
+         q5a=read.csv("Q5a.csv",header=FALSE,stringsAsFactors = FALSE),
          q6a=read.csv("Q6a.csv",header=TRUE,stringsAsFactors = FALSE),
          q6b=read.csv("Q6b.csv",header=TRUE,stringsAsFactors = FALSE),
          q6c=read.csv("Q6c.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -468,7 +468,7 @@ server <- function(input, output) {
       if(is.null(input$aprZip))
          return(NULL)
       projType <- c("Emergency Shelter","Transitional Housing","PH - Permanent Supportive Housing","Street Outreach","RETIRED","Services Only","Other","Safe Haven","PH - Housing Only","PH - Housing with Services","Day Shelter","Homelessness Prevention","PH - Rapid Re-Housing","Coordinated Assessment")
-      index <- as.numeric(allQuestions()[["q4a"]][1,5])
+      index <- as.numeric(allQuestions()[["q4a"]][1,"HMIS.Project.Type"])
       projType[index]
    })
    output$dq <- renderText({
@@ -512,9 +512,10 @@ server <- function(input, output) {
    output$homelessPer <- renderText({
       if(is.null(input$aprZip))
          return("This tool allows you to see the data that you'll be submitting to HUD in your APR upload to Sage. Simply upload the .zip file and explore!")
-      adults <- allQuestions()[["q7a"]][1,2]
-      children <- allQuestions()[["q7a"]][2,2]
-      childHoH <- allQuestions()[["q5a"]][15,1]
+      (adults <- allQuestions()[["q7a"]][1,2])
+      (children <- allQuestions()[["q7a"]][2,2])
+      (childHoH <- allQuestions()[["q5a"]][15,2])
+      # (allQuestions()[["q15"]][7,2])
       paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions()[["q15"]][7,2]/(adults+childHoH)))
    })
    output$eIncLeave <- renderText({
