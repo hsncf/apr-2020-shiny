@@ -468,7 +468,7 @@ server <- function(input, output) {
       if(is.null(input$aprZip))
          return(NULL)
       projType <- c("Emergency Shelter","Transitional Housing","PH - Permanent Supportive Housing","Street Outreach","RETIRED","Services Only","Other","Safe Haven","PH - Housing Only","PH - Housing with Services","Day Shelter","Homelessness Prevention","PH - Rapid Re-Housing","Coordinated Assessment")
-      index <- as.numeric(allQuestions()[["q4a"]][4,2])
+      index <- as.numeric(allQuestions()[["q4a"]][1,5])
       projType[index]
    })
    output$dq <- renderText({
