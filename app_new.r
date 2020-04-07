@@ -512,9 +512,9 @@ server <- function(input, output) {
    output$homelessPer <- renderText({
       if(is.null(input$aprZip))
          return("This tool allows you to see the data that you'll be submitting to HUD in your APR upload to Sage. Simply upload the .zip file and explore!")
-      (adults <- allQuestions()[["q7a"]][1,2])
-      (children <- allQuestions()[["q7a"]][2,2])
-      (childHoH <- allQuestions()[["q5a"]][15,2])
+      adults <- allQuestions()[["q7a"]][1,2]
+      children <- allQuestions()[["q7a"]][2,2]
+      childHoH <- allQuestions()[["q5a"]][15,2]
       # (allQuestions()[["q15"]][7,2])
       paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions()[["q15"]][7,2]/(adults+childHoH)))
    })
