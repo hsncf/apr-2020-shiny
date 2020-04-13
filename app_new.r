@@ -246,7 +246,18 @@ server <- function(input, output) {
          q13c2=read.csv("Q13c2.csv",header=TRUE,stringsAsFactors = FALSE),
          q14a=read.csv("Q14a.csv",header=TRUE,stringsAsFactors = FALSE),
          q14b=read.csv("Q14b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q15=read.csv("Q15.csv",header=TRUE,stringsAsFactors = FALSE),
+         q15=read.csv("Q15.csv",header=TRUE,stringsAsFactors = FALSE) %>%
+            dplyr::mutate(
+               X = gsub('"','',X)
+               ,category = ifelse(is.na(Total),X,NA)
+            ) %>%
+            tidyr::fill(category) %>%
+            dplyr::mutate(
+               category = ifelse(X == "Total", X, category)
+            ) %>%
+            dplyr::filter(!is.na(Total)) %>%
+            dplyr::select(category,X, dplyr::everything())
+         ,
          q16=read.csv("Q16.csv",header=TRUE,stringsAsFactors = FALSE),
          q17=read.csv("Q17.csv",header=TRUE,stringsAsFactors = FALSE),
          q18=read.csv("Q18.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -260,6 +271,20 @@ server <- function(input, output) {
          q22b=read.csv("Q22b.csv",header=TRUE,stringsAsFactors = FALSE),
          # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
          # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
+         q23c=read.csv("Q23c.csv",header=TRUE,stringsAsFactors = FALSE)%>%
+            dplyr::mutate(
+               X = gsub('"','',X)
+               ,category = ifelse(is.na(Total),X,NA)
+            ) %>%
+               tidyr::fill(category) %>%
+               dplyr::mutate(
+                  category = ifelse(X %in% c("Total","Total persons exiting to positive housing destinations",
+                                             "Total persons whose destinations excluded them from the calculation",
+                                             "Percentage"), X, category)
+               ) %>%
+               dplyr::filter(!is.na(Total)) %>%
+               dplyr::select(category,X, dplyr::everything())
+         ,
          q25a=read.csv("Q25a.csv",header=TRUE,stringsAsFactors = FALSE),
          q25b=read.csv("Q25b.csv",header=TRUE,stringsAsFactors = FALSE),
          q25c=read.csv("Q25c.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -268,7 +293,20 @@ server <- function(input, output) {
          q25f=read.csv("Q25f.csv",header=TRUE,stringsAsFactors = FALSE),
          q25g=read.csv("Q25g.csv",header=TRUE,stringsAsFactors = FALSE),
          q25h=read.csv("Q25h.csv",header=TRUE,stringsAsFactors = FALSE),
-         q25i=read.csv("Q25i.csv",header=TRUE,stringsAsFactors = FALSE),
+         q25i=read.csv("Q25i.csv",header=TRUE,stringsAsFactors = FALSE)%>%
+            dplyr::mutate(
+               X = gsub('"','',X)
+               ,category = ifelse(is.na(Total),X,NA)
+            ) %>%
+            tidyr::fill(category) %>%
+            dplyr::mutate(
+               category = ifelse(X %in% c("Total","Total persons exiting to positive housing destinations",
+                                          "Total persons whose destinations excluded them from the calculation",
+                                          "Percentage"), X, category)
+            ) %>%
+            dplyr::filter(!is.na(Total)) %>%
+            dplyr::select(category,X, dplyr::everything())
+         ,
          q26a=read.csv("Q26a.csv",header=TRUE,stringsAsFactors = FALSE),
          q26b=read.csv("Q26b.csv",header=TRUE,stringsAsFactors = FALSE),
          q26c=read.csv("Q26c.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -280,9 +318,34 @@ server <- function(input, output) {
          q27a=read.csv("Q27a.csv",header=TRUE,stringsAsFactors = FALSE),
          q27b=read.csv("Q27b.csv",header=TRUE,stringsAsFactors = FALSE),
          q27c=read.csv("Q27c.csv",header=TRUE,stringsAsFactors = FALSE),
-         q27d=read.csv("Q27d.csv",header=TRUE,stringsAsFactors = FALSE),
+         q27d=read.csv("Q27d.csv",header=TRUE,stringsAsFactors = FALSE)%>%
+            dplyr::mutate(
+               X = gsub('"','',X)
+               ,category = ifelse(is.na(Total),X,NA)
+            ) %>%
+            tidyr::fill(category) %>%
+            dplyr::mutate(
+               category = ifelse(X %in% c("Total","Total persons exiting to positive housing destinations",
+                                          "Total persons whose destinations excluded them from the calculation",
+                                          "Percentage"), X, category)
+            ) %>%
+            dplyr::filter(!is.na(Total)) %>%
+            dplyr::select(category,X, dplyr::everything())
+         ,
          q27e=read.csv("Q27e.csv",header=TRUE,stringsAsFactors = FALSE),
-         q27f=read.csv("Q27f.csv",header=TRUE,stringsAsFactors = FALSE)
+         q27f=read.csv("Q27f.csv",header=TRUE,stringsAsFactors = FALSE)%>%
+            dplyr::mutate(
+               X = gsub('"','',X)
+               ,category = ifelse(is.na(Total),X,NA)
+            ) %>%
+            tidyr::fill(category) %>%
+            dplyr::mutate(
+               category = ifelse(X %in% c("Total","Total persons exiting to positive housing destinations",
+                                          "Total persons whose destinations excluded them from the calculation",
+                                          "Percentage"), X, category)
+            ) %>%
+            dplyr::filter(!is.na(Total)) %>%
+            dplyr::select(category,X, dplyr::everything())
       )
       #print("it worked")
       projName <- as.character(nextTry[["q4a"]][1,3])
