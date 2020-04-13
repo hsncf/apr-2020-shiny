@@ -36,15 +36,73 @@ input_report_data <- function(path_folder){
 }
 # load both sources.
 allQuestions_old <- input_report_data("./data-unshared/raw/Sample-APR")
-allQuestions_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
+# allQuestions_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
 
 names(all)
 
 allQuestions_old %>% purrr::map(row.names)
-allQuestions_new %>% purrr::map(row.names)
+# allQuestions_new %>% purrr::map(row.names)
+# dto <- allQuestions_new
+
+# allQuestions_old[["q5a"]] %>% row.names()
+# ---- new-input ------------------
+base::source("./manipulation/question-greeter.R")
+allQuestions_new <- dto$data
+
+# ----- -------
+# allQuestions_new[["q7a"]] %>% glimpse()
+# allQuestions_old[["q7a"]] %>% glimpse()
+
+# ---- --------
+paste(
+  "Adults gaining or maintaining earned income:"
+  , sprintf("%1.0f%%",100*rowSums(allQuestions_old[["q19a3"]][1:5,4:6])[1]/allQuestions_old[["q19a3"]][1,8])
+)
+
+names(allQuestions_old[["q19a3"]][4:6])
+
+compute_over_columns <- c(
+"Retained.Income.Category.and.Same...at.Annual.Assessment.Exit.as.at.Start"
+,"Retained.Income.Category.and.Increased...at.Annual.Assessment.Exit"
+,"Did.Not.Have.the.Income.Category.at.Start.and.Gained.the.Income.Category.at.Annual.Assessment.Exit"
+)
+comput_in_row <- '"Number of Adults with Earned Income (ie.e, Employment Income)"'
+
+x2 <- allQuestions_old[["q19a3"]] %>%
+  dplyr::filter(
+    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' == '"Number of Adults with Earned Income (ie.e, Employment Income)"')
+
+x <- allQuestions_old[["q19a3"]][1:5,4:6]
+x1 <- rowSums(allQuestions_old[["q19a3"]][1:5,4:6])
 
 
-allQuestions_old[["q5a"]] %>% row.names()
+# ----- --------------------
+adults <- allQuestions_old[["q7a"]][1,2]
+children <- allQuestions_old[["q7a"]][2,2]
+childHoH <- allQuestions_old[["q5a"]][15,1] #%>% View()
+paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions_old[["q15"]][7,2]/(adults+childHoH)))
+
+# adults <- allQuestions_new[["q7a"]][1,2]
+adults <- allQuestions_new[["q7a"]] %>%
+  dplyr::filter(X == '"Adults"') %>%
+  dplyr::pull(Total)
+# children <- allQuestions_new[["q7a"]][2,2]
+children <- allQuestions_new[["q7a"]] %>% ### THIS VALUE IS NOT USED IN CALCULATION. CHECK WITH TINO
+    dplyr::filter(X == '"Children"') %>%
+    dplyr::pull(Total)
+# childHoH <- allQuestions_new[["q5a"]][15,2]
+childHoH <- allQuestions_new[["q5a"]] %>%
+  dplyr::filter(V1 == '"Number of Child and Unknown-Age Heads of Household"') %>%
+  dplyr::pull(V2)
+subsection_total <- allQuestions_new[["q15"]] %>%
+  dplyr::filter(category == "Homeless Situations", X == "Subtotal") %>%
+  dplyr::pull(Total)
+
+paste(
+  "Clients Entering from Homeless Situations:"
+  ,sprintf("%1.0f%%",100*subsection_total/(adults+childHoH) )
+)
+
 
 
 #
@@ -78,16 +136,7 @@ dplyr::left_join(allQuestions_old[["q15"]] %>% select(X))
 
 
 
-# ----- --------------------
-adults <- allQuestions_old[["q7a"]][1,2]
-children <- allQuestions_old[["q7a"]][2,2]
-childHoH <- allQuestions_old[["q5a"]][15,2]
-paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions_old[["q15"]][7,2]/(adults+childHoH)))
 
-adults <- allQuestions_new[["q7a"]][1,2]
-children <- allQuestions_new[["q7a"]][2,2]
-childHoH <- allQuestions_new[["q5a"]][15,1]
-paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions_new[["q15"]][7,2]/(adults+childHoH)))
 
 
 
