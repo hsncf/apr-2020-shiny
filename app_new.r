@@ -575,11 +575,30 @@ server <- function(input, output) {
    output$homelessPer <- renderText({
       if(is.null(input$aprZip))
          return("This tool allows you to see the data that you'll be submitting to HUD in your APR upload to Sage. Simply upload the .zip file and explore!")
-      adults <- allQuestions()[["q7a"]][1,2]
-      children <- allQuestions()[["q7a"]][2,2]
-      childHoH <- allQuestions()[["q5a"]][15,2]
-      # (allQuestions()[["q15"]][7,2])
-      paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions()[["q15"]][7,2]/(adults+childHoH)))
+      # adults <- allQuestions()[["q7a"]][1,2]
+      # children <- allQuestions()[["q7a"]][2,2]
+      # childHoH <- allQuestions()[["q5a"]][15,2]
+      # # (allQuestions()[["q15"]][7,2])
+      # paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions()[["q15"]][7,2]/(adults+childHoH)))
+      adults <- allQuestions()[["q7a"]] %>%
+         dplyr::filter(X == '"Adults"') %>%
+         dplyr::pull(Total)
+      # children <- allQuestions_new[["q7a"]][2,2]
+      children <- allQuestions()[["q7a"]] %>% ### THIS VALUE IS NOT USED IN CALCULATION. CHECK WITH TINO
+         dplyr::filter(X == '"Children"') %>%
+         dplyr::pull(Total)
+      # childHoH <- allQuestions_new[["q5a"]][15,2]
+      childHoH <- allQuestions()[["q5a"]] %>%
+         dplyr::filter(V1 == '"Number of Child and Unknown-Age Heads of Household"') %>%
+         dplyr::pull(V2)
+      subsection_total <- allQuestions()[["q15"]] %>%
+         dplyr::filter(category == "Homeless Situations", X == "Subtotal") %>%
+         dplyr::pull(Total)
+
+      paste(
+         "Clients Entering from Homeless Situations:"
+         ,sprintf("%1.0f%%",100*subsection_total/(adults+childHoH) )
+      )
    })
    output$eIncLeave <- renderText({
       if(is.null(input$aprZip))
