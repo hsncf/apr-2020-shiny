@@ -5,7 +5,7 @@
 
 # ---- load-packages --------------------------------------------------
 # Attach these packages so their functions don't need to be qualified: http://r-pkgs.had.co.nz/namespace.html#search-path
-# library(magrittr) # enables piping : %>%
+library(magrittr) # enables piping : %>%
 # library(dplyr)    # data wrangling
 # library(ggplot2)  # graphs
 # library(tidyr)    # data tidying
@@ -53,6 +53,27 @@ dto <- allQuestions_new
 # d <- read
 #
 # # ---- --------------------------
+
+# ---- replace-quotes -------------
+
+replace_quotes <- function(ds){
+  ds %>% 
+  dplyr::mutate_if(
+    is.character,
+    ~stringr::str_replace_all(
+      .,
+      c(
+        '"'  = ""
+        ,"'" = ""
+      )
+    )
+  ) %>%
+  dplyr::mutate_if(
+    is.character,
+    ~trimws(.)
+  )
+}
+
 lsd <- dto
 # question_names <- names(dto)
 qnum <- 19
@@ -72,40 +93,16 @@ dto[["path"]][52] %>% names()
 dto[["path"]][57] %>% names()
 
 for(q_name in names(dto[["path"]]) ){
-
+  
   if(q_name != "q5a" ){
     # i <- 1
-    dto[["data"]][[q_name]] <- read.csv(dto[["path"]][q_name] ,header = TRUE, stringsAsFactors = F)
-    # %>%
-    #   dplyr::mutate_if(is.character,
-    #     ~stringr::str_replace_all(
-    #       .,
-    #       c(
-    #         '"'  = ""
-    #         ,"'" = ""
-    #       )
-    #     )
-    #   ) %>%
-    #   dplyr::mutate_all(
-    #     ~trimws(.)
-    #   )
+    dto[["data"]][[q_name]] <- read.csv(dto[["path"]][q_name] ,header = TRUE, stringsAsFactors = F) %>%
+    replace_quotes()
   }
 
   if(q_name == "q5a" ){
-    dto[["data"]][[q_name]] <- read.csv(dto[["path"]][q_name] ,header = FALSE, stringsAsFactors = F)
-    # %>%
-    #   dplyr::mutate_if(is.character,
-    #     ~stringr::str_replace_all(
-    #       .,
-    #       c(
-    #         '"'  = ""
-    #         ,"'" = ""
-    #       )
-    #     )
-    #   ) %>%
-    #   dplyr::mutate_all(
-    #     ~trimws(.)
-    #   )
+    dto[["data"]][[q_name]] <- read.csv(dto[["path"]][q_name] ,header = FALSE, stringsAsFactors = F) %>%
+    replace_quotes()
   }
 
   if(q_name == "q15"){
