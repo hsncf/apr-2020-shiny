@@ -20,6 +20,26 @@ library(plotly)
 library(highcharter)
 library(flexdashboard)
 
+replace_quotes <- function(d){
+   d_out <- d %>%
+      dplyr::mutate_if(
+         is.character,
+         ~stringr::str_replace_all(
+            .,
+            c(
+               '"'  = ""
+               ,"'" = ""
+            )
+         )
+      ) %>%
+      dplyr::mutate_if(
+         is.character,
+         ~trimws(.)
+      )
+   return(d_out)
+}
+
+
 ui <- navbarPage(title = "Explore your Annual Performance Report",
                  theme = shinytheme("lumen"),
                  tabPanel(title="Summary",
@@ -218,35 +238,35 @@ server <- function(input, output) {
          # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
          # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
          # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q4a=read.csv("Q4a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q5a=read.csv("Q5a.csv",header=FALSE,stringsAsFactors = FALSE),
-         q6a=read.csv("Q6a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q6b=read.csv("Q6b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q6c=read.csv("Q6c.csv",header=TRUE,stringsAsFactors = FALSE),
-         q6d=read.csv("Q6d.csv",header=TRUE,stringsAsFactors = FALSE),
-         q6e=read.csv("Q6e.csv",header=TRUE,stringsAsFactors = FALSE),
-         q6f=read.csv("Q6f.csv",header=TRUE,stringsAsFactors = FALSE),
-         q7a=read.csv("Q7a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q7b=read.csv("Q7b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q8a=read.csv("Q8a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q8b=read.csv("Q8b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q9a=read.csv("Q9a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q9b=read.csv("Q9b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q10a=read.csv("Q10a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q10b=read.csv("Q10b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q10c=read.csv("Q10c.csv",header=TRUE,stringsAsFactors = FALSE),
-         q11=read.csv("Q11.csv",header=TRUE,stringsAsFactors = FALSE),
-         q12a=read.csv("Q12a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q12b=read.csv("Q12b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q13a1=read.csv("Q13a1.csv",header=TRUE,stringsAsFactors = FALSE),
-         q13a2=read.csv("Q13a2.csv",header=TRUE,stringsAsFactors = FALSE),
-         q13b1=read.csv("Q13b1.csv",header=TRUE,stringsAsFactors = FALSE),
-         q13b2=read.csv("Q13b2.csv",header=TRUE,stringsAsFactors = FALSE),
-         q13c1=read.csv("Q13c1.csv",header=TRUE,stringsAsFactors = FALSE),
-         q13c2=read.csv("Q13c2.csv",header=TRUE,stringsAsFactors = FALSE),
-         q14a=read.csv("Q14a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q14b=read.csv("Q14b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q15=read.csv("Q15.csv",header=TRUE,stringsAsFactors = FALSE) %>%
+         q4a=read.csv("Q4a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q5a=read.csv("Q5a.csv",header=FALSE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q6a=read.csv("Q6a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q6b=read.csv("Q6b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q6c=read.csv("Q6c.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q6d=read.csv("Q6d.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q6e=read.csv("Q6e.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q6f=read.csv("Q6f.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q7a=read.csv("Q7a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q7b=read.csv("Q7b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q8a=read.csv("Q8a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q8b=read.csv("Q8b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q9a=read.csv("Q9a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q9b=read.csv("Q9b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q10a=read.csv("Q10a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q10b=read.csv("Q10b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q10c=read.csv("Q10c.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q11=read.csv("Q11.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q12a=read.csv("Q12a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q12b=read.csv("Q12b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q13a1=read.csv("Q13a1.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q13a2=read.csv("Q13a2.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q13b1=read.csv("Q13b1.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q13b2=read.csv("Q13b2.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q13c1=read.csv("Q13c1.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q13c2=read.csv("Q13c2.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q14a=read.csv("Q14a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q14b=read.csv("Q14b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes(),
+         q15=read.csv("Q15.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() %>%
             dplyr::mutate(
                X = gsub('"','',X)
                ,category = ifelse(is.na(Total),X,NA)
@@ -256,22 +276,22 @@ server <- function(input, output) {
                category = ifelse(X == "Total", X, category)
             ) %>%
             dplyr::filter(!is.na(Total)) %>%
-            dplyr::select(category,X, dplyr::everything())
+            dplyr::select(category,X, dplyr::everything()) %>% replace_quotes()
          ,
-         q16=read.csv("Q16.csv",header=TRUE,stringsAsFactors = FALSE),
-         q17=read.csv("Q17.csv",header=TRUE,stringsAsFactors = FALSE),
-         q18=read.csv("Q18.csv",header=TRUE,stringsAsFactors = FALSE),
-         q19a1=read.csv("Q19a1.csv",header=TRUE,stringsAsFactors = FALSE),
-         q19a2=read.csv("Q19a2.csv",header=TRUE,stringsAsFactors = FALSE),
-         # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
-         q20a=read.csv("Q20a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q20b=read.csv("Q20b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q21=read.csv("Q21.csv",header=TRUE,stringsAsFactors = FALSE),
-         q22a1=read.csv("Q22a1.csv",header=TRUE,stringsAsFactors = FALSE),
-         q22b=read.csv("Q22b.csv",header=TRUE,stringsAsFactors = FALSE),
-         # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
-         # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q23c=read.csv("Q23c.csv",header=TRUE,stringsAsFactors = FALSE)%>%
+         q16=read.csv("Q16.csv",header=TRUE,stringsAsFactors       = FALSE) %>% replace_quotes() ,
+         q17=read.csv("Q17.csv",header=TRUE,stringsAsFactors       = FALSE) %>% replace_quotes() ,
+         q18=read.csv("Q18.csv",header=TRUE,stringsAsFactors       = FALSE) %>% replace_quotes() ,
+         q19a1=read.csv("Q19a1.csv",header=TRUE,stringsAsFactors   = FALSE) %>% replace_quotes() ,
+         q19a2=read.csv("Q19a2.csv",header=TRUE,stringsAsFactors   = FALSE) %>% replace_quotes() ,
+         # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q20a=read.csv("Q20a.csv",header=TRUE,stringsAsFactors     = FALSE) %>% replace_quotes() ,
+         q20b=read.csv("Q20b.csv",header=TRUE,stringsAsFactors     = FALSE) %>% replace_quotes() ,
+         q21=read.csv("Q21.csv",header=TRUE,stringsAsFactors       = FALSE) %>% replace_quotes() ,
+         q22a1=read.csv("Q22a1.csv",header=TRUE,stringsAsFactors   = FALSE) %>% replace_quotes() ,
+         q22b=read.csv("Q22b.csv",header=TRUE,stringsAsFactors     = FALSE) %>% replace_quotes() ,
+         # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors   = FALSE) %>% replace_quotes() ,
+         # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors   = FALSE) %>% replace_quotes() ,
+         q23c=read.csv("Q23c.csv",header=TRUE,stringsAsFactors     = FALSE)%>%
             dplyr::mutate(
                X = gsub('"','',X)
                ,category = ifelse(is.na(Total),X,NA)
@@ -283,7 +303,7 @@ server <- function(input, output) {
                                              "Percentage"), X, category)
                ) %>%
                dplyr::filter(!is.na(Total)) %>%
-               dplyr::select(category,X, dplyr::everything())
+               dplyr::select(category,X, dplyr::everything()) %>% replace_quotes()
          ,
          q25a=read.csv("Q25a.csv",header=TRUE,stringsAsFactors = FALSE),
          q25b=read.csv("Q25b.csv",header=TRUE,stringsAsFactors = FALSE),
@@ -305,19 +325,19 @@ server <- function(input, output) {
                                           "Percentage"), X, category)
             ) %>%
             dplyr::filter(!is.na(Total)) %>%
-            dplyr::select(category,X, dplyr::everything())
+            dplyr::select(category,X, dplyr::everything()) %>% replace_quotes()
          ,
-         q26a=read.csv("Q26a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26b=read.csv("Q26b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26c=read.csv("Q26c.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26d=read.csv("Q26d.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26e=read.csv("Q26e.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26f=read.csv("Q26f.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26g=read.csv("Q26g.csv",header=TRUE,stringsAsFactors = FALSE),
-         q26h=read.csv("Q26h.csv",header=TRUE,stringsAsFactors = FALSE),
-         q27a=read.csv("Q27a.csv",header=TRUE,stringsAsFactors = FALSE),
-         q27b=read.csv("Q27b.csv",header=TRUE,stringsAsFactors = FALSE),
-         q27c=read.csv("Q27c.csv",header=TRUE,stringsAsFactors = FALSE),
+         q26a=read.csv("Q26a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26b=read.csv("Q26b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26c=read.csv("Q26c.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26d=read.csv("Q26d.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26e=read.csv("Q26e.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26f=read.csv("Q26f.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26g=read.csv("Q26g.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q26h=read.csv("Q26h.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q27a=read.csv("Q27a.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q27b=read.csv("Q27b.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
+         q27c=read.csv("Q27c.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
          q27d=read.csv("Q27d.csv",header=TRUE,stringsAsFactors = FALSE)%>%
             dplyr::mutate(
                X = gsub('"','',X)
@@ -330,9 +350,9 @@ server <- function(input, output) {
                                           "Percentage"), X, category)
             ) %>%
             dplyr::filter(!is.na(Total)) %>%
-            dplyr::select(category,X, dplyr::everything())
+            dplyr::select(category,X, dplyr::everything()) %>% replace_quotes()
          ,
-         q27e=read.csv("Q27e.csv",header=TRUE,stringsAsFactors = FALSE),
+         q27e=read.csv("Q27e.csv",header=TRUE,stringsAsFactors = FALSE) %>% replace_quotes() ,
          q27f=read.csv("Q27f.csv",header=TRUE,stringsAsFactors = FALSE)%>%
             dplyr::mutate(
                X = gsub('"','',X)
@@ -345,7 +365,7 @@ server <- function(input, output) {
                                           "Percentage"), X, category)
             ) %>%
             dplyr::filter(!is.na(Total)) %>%
-            dplyr::select(category,X, dplyr::everything())
+            dplyr::select(category,X, dplyr::everything()) %>% replace_quotes()
       )
       #print("it worked")
       projName <- as.character(nextTry[["q4a"]][1,3])
