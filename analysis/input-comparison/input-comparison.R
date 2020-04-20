@@ -15,10 +15,12 @@ library(plotly)
 # Call `base::source()` on any repo file that defines functions needed below.
 # source("./scripts/common-functions.R") # used in multiple reports
 # source("./scripts/graphing/graph-presets.R") # fonts, colors, themes
-
+config <- config::get()
 # ---- declare-globals --------------------------
 
 # ---- load-data -------------------------------
+ds_project_type <- readr::read_csv(config$project_type)
+
 # function to load the questions from each source
 input_report_data <- function(path_folder){
   # path_folder = "./data-unshared/raw/CSV-APR_2019"
@@ -53,13 +55,46 @@ allQuestions_new <- dto$data
 # allQuestions_new[["q7a"]] %>% glimpse()
 # allQuestions_old[["q7a"]] %>% glimpse()
 
+# ---- -------
+
+allQuestions_new[["q4a"]] %>% glimpse()
+allQuestions_old[["q4a"]] %>% glimpse()
+
+allQuestions_new[["q4a"]] %>% View()
+allQuestions_old[["q4a"]] %>% View()
+
+
+
+
+projType <- as.numeric(allQuestions_old[["q4a"]][4,2])
+totalPersons <- allQuestions_old[["q7a"]][5,2]
+stayers <- allQuestions_old[["q5a"]][8,1]
+excluded <- allQuestions_old[["q23a"]][41,2] + allQuestions_old[["q23b"]][41,2]
+goodDest <- allQuestions_old[["q23a"]][13,2]+allQuestions_old[["q23b"]][13,2]
+posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions_old[["q23a"]][39,2]+allQuestions_old[["q23b"]][39,2]-excluded))
+posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+if(projType==3)
+  return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+paste("Clients exiting to permanent destinations:",posDestPer)
+
+projType <- as.numeric(allQuestions_new[["q4a"]][4,2])
+
+
+
+
 # ---- --------
+# Adults gaining or maintaining earned income
+# Hold on this item, awaiting clarification from Tino
+allQuestions_old[["q19a3"]] %>% View()
+
 paste(
   "Adults gaining or maintaining earned income:"
   , sprintf("%1.0f%%",100*rowSums(allQuestions_old[["q19a3"]][1:5,4:6])[1]/allQuestions_old[["q19a3"]][1,8])
 )
 
 names(allQuestions_old[["q19a3"]][4:6])
+d <- allQuestions_old[["q19a3"]][1:5, 4:6]
+d1 <- rowSums(d)[1]
 
 compute_over_columns <- c(
 "Retained.Income.Category.and.Same...at.Annual.Assessment.Exit.as.at.Start"
@@ -70,13 +105,20 @@ comput_in_row <- '"Number of Adults with Earned Income (ie.e, Employment Income)
 
 x2 <- allQuestions_old[["q19a3"]] %>%
   dplyr::filter(
-    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' == '"Number of Adults with Earned Income (ie.e, Employment Income)"')
+    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' ==
+      '"Number of Adults with Earned Income (ie.e, Employment Income)"'
+  )
 
 x <- allQuestions_old[["q19a3"]][1:5,4:6]
 x1 <- rowSums(allQuestions_old[["q19a3"]][1:5,4:6])
 
 
+allQuestions_new[["q19a2"]] %>% View()
+
+
 # ----- --------------------
+# Clients Entering from Homeless Situations
+
 adults <- allQuestions_old[["q7a"]][1,2]
 children <- allQuestions_old[["q7a"]][2,2]
 childHoH <- allQuestions_old[["q5a"]][15,1] #%>% View()
@@ -84,15 +126,15 @@ paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQues
 
 # adults <- allQuestions_new[["q7a"]][1,2]
 adults <- allQuestions_new[["q7a"]] %>%
-  dplyr::filter(X == '"Adults"') %>%
+  dplyr::filter(X == "Adults") %>%
   dplyr::pull(Total)
 # children <- allQuestions_new[["q7a"]][2,2]
 children <- allQuestions_new[["q7a"]] %>% ### THIS VALUE IS NOT USED IN CALCULATION. CHECK WITH TINO
-    dplyr::filter(X == '"Children"') %>%
+    dplyr::filter(X == "Children") %>%
     dplyr::pull(Total)
 # childHoH <- allQuestions_new[["q5a"]][15,2]
 childHoH <- allQuestions_new[["q5a"]] %>%
-  dplyr::filter(V1 == '"Number of Child and Unknown-Age Heads of Household"') %>%
+  dplyr::filter(V1 == "Number of Child and Unknown-Age Heads of Household") %>%
   dplyr::pull(V2)
 subsection_total <- allQuestions_new[["q15"]] %>%
   dplyr::filter(category == "Homeless Situations", X == "Subtotal") %>%

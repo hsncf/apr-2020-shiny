@@ -15,7 +15,7 @@ library(magrittr) # enables piping : %>%
 # Call `base::source()` on any repo file that defines functions needed below.
 # source("./scripts/common-functions.R") # used in multiple reports
 # source("./scripts/graphing/graph-presets.R") # fonts, colors, themes
-
+config <- config::get()
 # ---- declare-globals --------------------------
 
 # ---- load-data -------------------------------
@@ -56,8 +56,8 @@ dto <- allQuestions_new
 
 # ---- replace-quotes -------------
 
-replace_quotes <- function(ds){
-  ds %>% 
+replace_quotes <- function(d){
+  d_out <- d %>%
   dplyr::mutate_if(
     is.character,
     ~stringr::str_replace_all(
@@ -72,6 +72,7 @@ replace_quotes <- function(ds){
     is.character,
     ~trimws(.)
   )
+  return(d_out)
 }
 
 lsd <- dto
@@ -93,7 +94,7 @@ dto[["path"]][52] %>% names()
 dto[["path"]][57] %>% names()
 
 for(q_name in names(dto[["path"]]) ){
-  
+
   if(q_name != "q5a" ){
     # i <- 1
     dto[["data"]][[q_name]] <- read.csv(dto[["path"]][q_name] ,header = TRUE, stringsAsFactors = F) %>%
