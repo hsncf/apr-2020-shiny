@@ -603,7 +603,7 @@ server <- function(input, output) {
       adults <- allQuestions()[["q7a"]] %>%
          dplyr::filter(X == "Adults") %>%
          dplyr::pull(Total)
-      # children <- allQuestions_new[["q7a"]][2,2]
+      # children <- allQuestions()[["q7a"]][2,2]
       children <- allQuestions()[["q7a"]] %>% ### THIS VALUE IS NOT USED IN CALCULATION. CHECK WITH TINO
          dplyr::filter(X == "Children") %>%
          dplyr::pull(Total)
@@ -659,16 +659,38 @@ server <- function(input, output) {
    output$destPos2 <- renderText({
       if(is.null(input$aprZip))
          return(NULL)
-      projType <- as.numeric(allQuestions()[["q4a"]][4,2])
-      totalPersons <- allQuestions()[["q7a"]][5,2]
-      stayers <- allQuestions()[["q5a"]][8,1]
-      excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
-      goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
-      posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
+      # projType <- as.numeric(allQuestions()[["q4a"]][4,2])
+      # totalPersons <- allQuestions()[["q7a"]][5,2]
+      # stayers <- allQuestions()[["q5a"]][8,1]
+      # excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
+      # goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
+      # posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
+      # posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+      # if(projType==3)
+      #    return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+      # paste("Clients exiting to permanent destinations:",posDestPer)
+      projType <- allQuestions()[["q4a"]] %>% dplyr::pull(HMIS.Project.Type)
+      totalPersons <- allQuestions()[["q7a"]] %>%
+         dplyr::filter(X == "Total") %>%
+         dplyr::pull(Total)
+      stayers <- allQuestions()[["q5a"]] %>%
+         dplyr::filter(V1 == "Number of Stayers") %>%
+         dplyr::pull(V2)
+      excluded <- allQuestions()[["q23c"]] %>%
+         dplyr::filter(category == "Total persons whose destinations excluded them from the calculation") %>%
+         dplyr::pull(Total)
+      goodDest <- allQuestions()[["q23c"]] %>%
+         dplyr::filter(category == "Permanent Destinations", X == "Subtotal") %>%
+         dplyr::pull(Total)
+      Total <- allQuestions()[["q23c"]] %>%
+         dplyr::filter(category == "Total", X == "Total") %>%
+         dplyr::pull(Total)
+      posDestPer <- sprintf("%1.2f%%",100*(goodDest/(Total-excluded)))
       posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
       if(projType==3)
          return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
       paste("Clients exiting to permanent destinations:",posDestPer)
+
    })
    output$validTable <- renderTable({
       labels <- c("1. Total Number of Persons Served","2. Number of Adults (age 18 or over)","3. Number of Children (under age 18)","4. Number of Persons with Unknown Age","5. Number of Leavers","6. Number of Adult Leavers","7. Number of Adult and Head of Household Leavers","8. Number of Stayers","9. Number of Adult Stayers","10. Number of Veterans","11. Number of Chronically Homeless Persons","12. Number of Youth Under Age 25","13. Number of Parenting Youth Under Age 25 with Children","14. Number of Adult Heads of Household","15. Number of Child and Unknown-Age Heads of Household","16. Heads of Households and Adult Stayers in the Project 365 Days or More")
