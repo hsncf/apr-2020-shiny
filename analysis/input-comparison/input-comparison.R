@@ -66,15 +66,18 @@ if(projType==3)
 paste("Clients exiting to permanent destinations:",posDestPer)
 
 # ---- --------
-
+# Adults gaining or maintaining earned income
+# Hold on this item, awaiting clarification from Tino
 allQuestions_old[["q19a3"]] %>% View()
-allQuestions_new[["q19a3"]] %>% View()
+
 paste(
   "Adults gaining or maintaining earned income:"
   , sprintf("%1.0f%%",100*rowSums(allQuestions_old[["q19a3"]][1:5,4:6])[1]/allQuestions_old[["q19a3"]][1,8])
 )
 
 names(allQuestions_old[["q19a3"]][4:6])
+d <- allQuestions_old[["q19a3"]][1:5, 4:6]
+d1 <- rowSums(d)[1]
 
 compute_over_columns <- c(
 "Retained.Income.Category.and.Same...at.Annual.Assessment.Exit.as.at.Start"
@@ -85,10 +88,15 @@ comput_in_row <- '"Number of Adults with Earned Income (ie.e, Employment Income)
 
 x2 <- allQuestions_old[["q19a3"]] %>%
   dplyr::filter(
-    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' == '"Number of Adults with Earned Income (ie.e, Employment Income)"')
+    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' ==
+      '"Number of Adults with Earned Income (ie.e, Employment Income)"'
+  )
 
 x <- allQuestions_old[["q19a3"]][1:5,4:6]
 x1 <- rowSums(allQuestions_old[["q19a3"]][1:5,4:6])
+
+
+allQuestions_new[["q19a2"]] %>% View()
 
 
 # ----- --------------------

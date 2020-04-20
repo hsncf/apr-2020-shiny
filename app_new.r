@@ -633,12 +633,14 @@ server <- function(input, output) {
    output$incSummary <- renderText({
       if(is.null(input$aprZip))
          return("For more information, navigate to the 'About' tab")
-      paste("Adults gaining or maintaining earned income:", sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[1]/allQuestions()[["q19a3"]][1,8]))
+      paste("Pending clarification from Tino")
+      # paste("Adults gaining or maintaining earned income:", sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[1]/allQuestions()[["q19a3"]][1,8]))
    })
    output$incSummary2 <- renderText({
       if(is.null(input$aprZip))
          return(NULL)
-      paste( "Adults gaining or maintaining other income:",sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[3]/allQuestions()[["q19a3"]][1,8]))
+      paste("Pending clarification from Tino")
+      # paste( "Adults gaining or maintaining other income:",sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[3]/allQuestions()[["q19a3"]][1,8]))
    })
    output$destPos <- renderText({
       if(is.null(input$aprZip))
