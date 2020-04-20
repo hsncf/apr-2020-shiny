@@ -64,39 +64,39 @@ allQuestions_new[["q23a"]] %>% View()
 allQuestions_old[["q23a"]] %>% View()
 
 
-# projType <- as.numeric(allQuestions_old[["q4a"]][4,2])
-# totalPersons <- allQuestions_old[["q7a"]][5,2]
-# stayers <- allQuestions_old[["q5a"]][8,1]
-# excluded <- allQuestions_old[["q23a"]][41,2] + allQuestions_old[["q23b"]][41,2]
-# goodDest <- allQuestions_old[["q23a"]][13,2]+allQuestions_old[["q23b"]][13,2]
-# posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions_old[["q23a"]][39,2]+allQuestions_old[["q23b"]][39,2]-excluded))
-# posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
-# if(projType==3)
-#   return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
-# paste("Clients exiting to permanent destinations:",posDestPer)
-#
-#
-# projType <- allQuestions_new[["q4a"]] %>% dplyr::pull(HMIS.Project.Type)
-# totalPersons <- allQuestions_new[["q7a"]] %>%
-#   dplyr::filter(X == "Total") %>%
-#   dplyr::pull(Total)
-# stayers <- allQuestions_new[["q5a"]] %>%
-#   dplyr::filter(V1 == "Number of Stayers") %>%
-#   dplyr::pull(V2)
-# excluded <- allQuestions_new[["q23c"]] %>%
-#   dplyr::filter(category == "Total persons whose destinations excluded them from the calculation") %>%
-#   dplyr::pull(Total)
-# goodDest <- allQuestions_new[["q23c"]] %>%
-#   dplyr::filter(category == "Permanent Destinations", X == "Subtotal") %>%
-#   dplyr::pull(Total)
-# Total <- allQuestions_new[["q23c"]] %>%
-#   dplyr::filter(category == "Total", X == "Total") %>%
-#   dplyr::pull(Total)
-# posDestPer <- sprintf("%1.2f%%",100*(goodDest/(Total-excluded)))
-# posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
-# if(projType==3)
-#   return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
-# paste("Clients exiting to permanent destinations:",posDestPer)
+projType <- as.numeric(allQuestions_old[["q4a"]][4,2])
+totalPersons <- allQuestions_old[["q7a"]][5,2]
+stayers <- allQuestions_old[["q5a"]][8,1]
+excluded <- allQuestions_old[["q23a"]][41,2] + allQuestions_old[["q23b"]][41,2]
+goodDest <- allQuestions_old[["q23a"]][13,2]+allQuestions_old[["q23b"]][13,2]
+posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions_old[["q23a"]][39,2]+allQuestions_old[["q23b"]][39,2]-excluded))
+posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+if(projType==3)
+  return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+paste("Clients exiting to permanent destinations:",posDestPer)
+
+
+projType <- allQuestions_new[["q4a"]] %>% dplyr::pull(HMIS.Project.Type)
+totalPersons <- allQuestions_new[["q7a"]] %>%
+  dplyr::filter(X == "Total") %>%
+  dplyr::pull(Total)
+stayers <- allQuestions_new[["q5a"]] %>%
+  dplyr::filter(V1 == "Number of Stayers") %>%
+  dplyr::pull(V2)
+excluded <- allQuestions_new[["q23c"]] %>%
+  dplyr::filter(category == "Total persons whose destinations excluded them from the calculation") %>%
+  dplyr::pull(Total)
+goodDest <- allQuestions_new[["q23c"]] %>%
+  dplyr::filter(category == "Permanent Destinations", X == "Subtotal") %>%
+  dplyr::pull(Total)
+Total <- allQuestions_new[["q23c"]] %>%
+  dplyr::filter(category == "Total", X == "Total") %>%
+  dplyr::pull(Total)
+posDestPer <- sprintf("%1.2f%%",100*(goodDest/(Total-excluded)))
+posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+if(projType==3)
+  return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+paste("Clients exiting to permanent destinations:",posDestPer)
 
 
 # ---- --------
