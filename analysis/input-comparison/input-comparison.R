@@ -15,10 +15,12 @@ library(plotly)
 # Call `base::source()` on any repo file that defines functions needed below.
 # source("./scripts/common-functions.R") # used in multiple reports
 # source("./scripts/graphing/graph-presets.R") # fonts, colors, themes
-
+config <- config::get()
 # ---- declare-globals --------------------------
 
 # ---- load-data -------------------------------
+ds_project_type <- readr::read_csv(config$project_type)
+
 # function to load the questions from each source
 input_report_data <- function(path_folder){
   # path_folder = "./data-unshared/raw/CSV-APR_2019"
@@ -54,16 +56,31 @@ allQuestions_new <- dto$data
 # allQuestions_old[["q7a"]] %>% glimpse()
 
 # ---- -------
-projType <- as.numeric(allQuestions()[["q4a"]][4,2])
-totalPersons <- allQuestions()[["q7a"]][5,2]
-stayers <- allQuestions()[["q5a"]][8,1]
-excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
-goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
-posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
+
+allQuestions_new[["q4a"]] %>% glimpse()
+allQuestions_old[["q4a"]] %>% glimpse()
+
+allQuestions_new[["q4a"]] %>% View()
+allQuestions_old[["q4a"]] %>% View()
+
+
+
+
+projType <- as.numeric(allQuestions_old[["q4a"]][4,2])
+totalPersons <- allQuestions_old[["q7a"]][5,2]
+stayers <- allQuestions_old[["q5a"]][8,1]
+excluded <- allQuestions_old[["q23a"]][41,2] + allQuestions_old[["q23b"]][41,2]
+goodDest <- allQuestions_old[["q23a"]][13,2]+allQuestions_old[["q23b"]][13,2]
+posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions_old[["q23a"]][39,2]+allQuestions_old[["q23b"]][39,2]-excluded))
 posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
 if(projType==3)
   return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
 paste("Clients exiting to permanent destinations:",posDestPer)
+
+projType <- as.numeric(allQuestions_new[["q4a"]][4,2])
+
+
+
 
 # ---- --------
 # Adults gaining or maintaining earned income

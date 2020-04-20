@@ -15,7 +15,7 @@ library(magrittr) # enables piping : %>%
 # Call `base::source()` on any repo file that defines functions needed below.
 # source("./scripts/common-functions.R") # used in multiple reports
 # source("./scripts/graphing/graph-presets.R") # fonts, colors, themes
-
+config <- config::get()
 # ---- declare-globals --------------------------
 
 # ---- load-data -------------------------------
