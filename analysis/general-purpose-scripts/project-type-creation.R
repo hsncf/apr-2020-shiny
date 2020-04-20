@@ -15,7 +15,7 @@ projType <- c("Emergency Shelter"
 
 
 projType1 <- tibble::tibble(1:14,projType)
-colnames(projType1) <- c("X","Project Type")
+colnames(projType1) <- c("x","project_type")
 
 
 readr::write_csv(projType1,"./data-public/metadata/project-type.csv")
