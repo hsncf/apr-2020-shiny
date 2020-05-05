@@ -46,7 +46,7 @@ ui <- navbarPage(
    theme = shinytheme("united"),
    # SUMMARY
    tabPanel(
-      title="Summary",
+      title = "Summary",
       sidebarLayout(
          sidebarPanel(
             tags$img(align = "left",height = 200, width = 200, src="HSN-logo-color.JPG"),
@@ -573,9 +573,13 @@ server <- function(input, output) {
    #   text(bp,0,as.matrix(udeDQ),cex=1,pos=3)
    # })
    output$names <- renderText({
-      if(is.null(input$aprZip))
+      if( is.null(input$aprZip) ){
          return("Select an APR to Begin")
-      as.character(allQuestions()[["q4a"]][1,3])
+      }else{
+      # as.character(allQuestions()[["q4a"]][1,3])
+      project_name <- rep_new[["q4a"]] %>% dplyr::pull("Project.Name")
+      print(project_name)
+      }
    })
    output$names_exit <- renderText({
       if(is.null(input$aprZip))
