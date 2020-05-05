@@ -43,6 +43,7 @@ project_name <- rep_new[["q4a"]] %>% dplyr::pull("Project.Name")
 # projType <- c("Emergency Shelter","Transitional Housing","PH - Permanent Supportive Housing","Street Outreach","RETIRED","Services Only","Other","Safe Haven","PH - Housing Only","PH - Housing with Services","Day Shelter","Homelessness Prevention","PH - Rapid Re-Housing","Coordinated Assessment")
 # index <- as.numeric(allQuestions()[["q4a"]][1,5])
 # projType[index]
+
 ds_project_type <- readr::read_csv(config$project_type)
 project_type_id_input <-  rep_new[["q4a"]] %>% dplyr::pull("HMIS.Project.Type")
 project_type <- ds_project_type %>%
@@ -104,11 +105,38 @@ paste(
 )
 
 # ----- incSummary -------------
+# paste("Adults gaining or maintaining earned income:", sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[1]/allQuestions()[["q19a3"]][1,8]))
 
+# "Adults gaining or maintaining earned income:"
+
+rep_old[["q19a3"]] %>% View()
+
+paste(
+  "Adults gaining or maintaining earned income:"
+  , sprintf("%1.0f%%",100*rowSums(rep_old[["q19a3"]][1:5,4:6])[1]/rep_old[["q19a3"]][1,8])
+)
+
+names(rep_old[["q19a3"]][4:6])
+d <- rep_old[["q19a3"]][1:5, 4:6]
+d1 <- rowSums(d)[1]
+
+compute_over_columns <- c(
+  "Retained.Income.Category.and.Same...at.Annual.Assessment.Exit.as.at.Start"
+  ,"Retained.Income.Category.and.Increased...at.Annual.Assessment.Exit"
+  ,"Did.Not.Have.the.Income.Category.at.Start.and.Gained.the.Income.Category.at.Annual.Assessment.Exit"
+)
+comput_in_row <- '"Number of Adults with Earned Income (ie.e, Employment Income)"'
+
+x2 <- rep_old[["q19a3"]] %>%
+  dplyr::filter(
+    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' ==
+      '"Number of Adults with Earned Income (ie.e, Employment Income)"'
+  )
 # ----- incSummary2 -------------
 
 
 # ----- destPos2 -------------
+# identical to destPos (must be called something esle to appear twice in the app)
 # projType <- as.numeric(allQuestions()[["q4a"]][4,2])
 # totalPersons <- allQuestions()[["q7a"]][5,2]
 # stayers <- allQuestions()[["q5a"]][8,1]
@@ -161,6 +189,58 @@ if(projType==3){
   paste("Clients exiting to permanent destinations:",posDestPer)
 }
 
+# ----- destPlot -------
+# names <- c("Perm","Temp","Inst","Other")
+# data <- data.frame(c(allQuestions()[["q23a"]][13,2],allQuestions()[["q23b"]][13,2]), c(allQuestions()[["q23a"]][23,2],allQuestions()[["q23b"]][23,2]), c(allQuestions()[["q23a"]][31,2],allQuestions()[["q23b"]][31,2]), c(allQuestions()[["q23a"]][38,2],allQuestions()[["q23b"]][38,2]))
+# colnames(data) <- names
+# bp<-barplot(as.matrix(data), main="Exit Destinations",
+#             xlab="Destination", col=c("#0947B2","#08A88D"),
+#             legend = c("90 days or more","<90 days"))
+
+names <- c("Perm","Temp","Inst","Other")
+data <- data.frame(c(rep_old[["q23a"]][13,2],rep_old[["q23b"]][13,2]), c(rep_old[["q23a"]][23,2],rep_old[["q23b"]][23,2]), c(rep_old[["q23a"]][31,2],rep_old[["q23b"]][31,2]), c(rep_old[["q23a"]][38,2],rep_old[["q23b"]][38,2]))
+colnames(data) <- names
+bp <- barplot(as.matrix(data), main="Exit Destinations",
+            xlab="Destination", col=c("#0947B2","#08A88D"),
+            legend = c("90 days or more","<90 days"))
+
+# the new report does not have two files (23a and 23b), but only one (23c)
+# it seems that the new report no longer differentiate b/w "90 days or more" and"<90 days"
+
+names <- c("Perm","Temp","Inst","Other")
+a <- rep_new[["q23c"]] %>%
+  dplyr::filter(category == "Permanent Destinations", X == "Subtotal") %>%
+  dplyr::pull("Total")
+
+
+
+
+# ---- -------------------
+# if(is.null(input$aprZip))
+#   return(NULL)
+# projType <- as.numeric(allQuestions()[["q4a"]][4,2])
+# totalPersons <- allQuestions()[["q7a"]][5,2]
+# stayers <- allQuestions()[["q5a"]][8,1]
+# excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
+# goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
+# posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
+# posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+# if(projType==3)
+#   return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+# paste("Clients exiting to permanent destinations:",posDestPer)
+
+
+# projType <- as.numeric(allQuestions()[["q4a"]][4,2])
+# totalPersons <- allQuestions()[["q7a"]][5,2]
+# stayers <- allQuestions()[["q5a"]][8,1]
+# excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
+# goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
+# posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
+# posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+# if(projType==3)
+#    return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+# paste("Clients exiting to permanent destinations:",posDestPer)
+
 
 
 # ---- dqInc -------
@@ -208,89 +288,6 @@ paste(
   "Data Quality for Income and Housing Data Quality: ",
   sprintf( "%1.2f%%", 100*(1 - ( incHousingMissing / (HoH + leavers+stayersHohAdult + leaversHohAdult) ) ) )
 )
-
-
-
-# ---- -------
-# Clients exiting to permanent destinations
-allQuestions_new[["q4a"]] %>% glimpse()
-allQuestions_old[["q4a"]] %>% glimpse()
-
-allQuestions_new[["q23a"]] %>% View()
-allQuestions_old[["q23a"]] %>% View()
-
-
-
-
-
-# ---- --------
-# Adults gaining or maintaining earned income
-# Hold on this item, awaiting clarification from Tino
-allQuestions_old[["q19a3"]] %>% View()
-
-paste(
-  "Adults gaining or maintaining earned income:"
-  , sprintf("%1.0f%%",100*rowSums(allQuestions_old[["q19a3"]][1:5,4:6])[1]/allQuestions_old[["q19a3"]][1,8])
-)
-
-names(allQuestions_old[["q19a3"]][4:6])
-d <- allQuestions_old[["q19a3"]][1:5, 4:6]
-d1 <- rowSums(d)[1]
-
-compute_over_columns <- c(
-"Retained.Income.Category.and.Same...at.Annual.Assessment.Exit.as.at.Start"
-,"Retained.Income.Category.and.Increased...at.Annual.Assessment.Exit"
-,"Did.Not.Have.the.Income.Category.at.Start.and.Gained.the.Income.Category.at.Annual.Assessment.Exit"
-)
-comput_in_row <- '"Number of Adults with Earned Income (ie.e, Employment Income)"'
-
-x2 <- allQuestions_old[["q19a3"]] %>%
-  dplyr::filter(
-    'X.Income.Change.by.Income.Category..Universe..Adults.with.Income.Information.at.Start.and.Annual.Assessment.Exit..' ==
-      '"Number of Adults with Earned Income (ie.e, Employment Income)"'
-  )
-
-x <- allQuestions_old[["q19a3"]][1:5,4:6]
-x1 <- rowSums(allQuestions_old[["q19a3"]][1:5,4:6])
-
-
-allQuestions_new[["q19a2"]] %>% View()
-
-
-# ----- --------------------
-
-
-
-#
-# inspect individual questions
-focal_name <- "q15"
-print(focal_name)
-View(allQuestions_old[[focal_name]]); View(allQuestions_new[[focal_name]])
-
-items_header_false <- c("q5a")
-
-# ---- q4a -------------------
-# Project Name
-allQuestions_old[["q4a"]][2,2]
-allQuestions_new[["q4a"]][1,3]
-
-# Project Type
-
-allQuestions_old[["q4a"]][4,2]
-allQuestions_new[["q4a"]][1,"HMIS.Project.Type"]
-
-allQuestions_old[["q15"]][7,2]
-allQuestions_new[["q15"]][7,2]
-
-d1 <-allQuestions_new[["q15"]] %>% select(X) %>% mutate(Xold = X)
-d2 <- allQuestions_old[["q15"]] %>% select(X)
-
-setdiff(allQuestions_new[["q15"]] %>% select(X),allQuestions_old[["q15"]] %>% select(X))
-
-d3 <- dplyr::left_join(d2, d1)
-dplyr::left_join(allQuestions_old[["q15"]] %>% select(X))
-
-
 
 
 
