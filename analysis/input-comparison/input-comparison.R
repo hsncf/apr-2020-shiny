@@ -36,6 +36,19 @@ as.character(rep_old[["q4a"]][2,2])
 as.character(rep_new[["q4a"]][1,3])
 
 project_name <- rep_new[["q4a"]] %>% dplyr::pull("Project.Name")
+
+# ---- output-type ---------------
+# if(is.null(input$aprZip))
+#   return(NULL)
+# projType <- c("Emergency Shelter","Transitional Housing","PH - Permanent Supportive Housing","Street Outreach","RETIRED","Services Only","Other","Safe Haven","PH - Housing Only","PH - Housing with Services","Day Shelter","Homelessness Prevention","PH - Rapid Re-Housing","Coordinated Assessment")
+# index <- as.numeric(allQuestions()[["q4a"]][1,5])
+# projType[index]
+ds_project_type <- readr::read_csv(config$project_type)
+project_type_id_input <-  rep_new[["q4a"]] %>% dplyr::pull("HMIS.Project.Type")
+project_type <- ds_project_type %>%
+  dplyr::filter(project_type_id == project_type_id_input) %>%
+  dplyr::pull(project_type_label)
+print(project_type)
 # ---- -------
 # Clients exiting to permanent destinations
 allQuestions_new[["q4a"]] %>% glimpse()
