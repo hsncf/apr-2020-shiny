@@ -49,6 +49,22 @@ project_type <- ds_project_type %>%
   dplyr::filter(project_type_id == project_type_id_input) %>%
   dplyr::pull(project_type_label)
 print(project_type)
+
+# ---- output-clientCounts ------
+# totalPersons <- allQuestions()[["q7a"]][5,2]
+# paste("Total Clients:",totalPersons)
+
+totalPersons <- rep_old[["q7a"]][5,2]
+paste("Total Clients:",totalPersons)
+
+totalPersons <- rep_new[["q7a"]][5,2]
+paste("Total Clients:",totalPersons)
+
+totalPerson <- rep_new[["q7a"]] %>%
+  dplyr::filter(X == "Total") %>%
+  dplyr::pull("Total")
+paste("Total Clients:",totalPersons)
+
 # ---- -------
 # Clients exiting to permanent destinations
 allQuestions_new[["q4a"]] %>% glimpse()
