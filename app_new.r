@@ -174,23 +174,23 @@ ui <- navbarPage(
       mainPanel(
          tabsetPanel(
             tabPanel(
-               "Age",
+               title = "Age",
                tags$h2("What are the Ages of Clients in the Project?"),
                h3(textOutput("adultKidCount")),
                plotlyOutput("plot")
             ),
             tabPanel(
-               "Race",
+               title = "Race",
                tags$h2("Client Race"),
                plotlyOutput("racePlot")
             ),
             tabPanel(
-               "Ethnicity",
+               title = "Ethnicity",
                tags$h2("Client Ethnicity"),
                plotlyOutput("ethPlot")
             ),
             tabPanel(
-               "Gender",
+               title = "Gender",
                plotlyOutput("genderPlot")
             )
          ) # close tabsetPanel
@@ -206,21 +206,21 @@ ui <- navbarPage(
       mainPanel(
          tabsetPanel(
             tabPanel(
-               "PIT",
+               title = "PIT",
                tags$h3("Point in Time Counts of Persons and Households"),
                column(12,plotlyOutput("pit"))
             ),
             tabPanel(
-               "Disabilities",
+               title = "Disabilities",
                tags$h2("What Health and Mental Health Conditions Did Clients Have at Entry?"),
                plotlyOutput("phyPlot")
             ),
             tabPanel(
-               "Residence Prior",
+               title = "Residence Prior",
                plotlyOutput("livSitPlot")
             ),
             tabPanel(
-               "Income Sources",
+               title = "Income Sources",
                plotlyOutput("incStatus"),
                tags$h3("Adult Stayers (365 days or more)"),
                tableOutput("incStayTable"),
@@ -230,14 +230,14 @@ ui <- navbarPage(
                tags$h4(textOutput("eIncLeave"))
             ),
             tabPanel(
-               "Non-Cash and Health Insurance",
+               title = "Non-Cash and Health Insurance",
                tags$h3("Non-Cash Benefits and Health Insurance"),
                plotOutput("benefitEntry"),
                plotOutput("insStatus"),
                plotOutput("healthIns")
             ),
             tabPanel(
-               "Length of Participation",
+               title = "Length of Participation",
                tags$h3("Length of Participation in Project"),
                plotOutput("lengthTotal"),
                plotOutput("lengthLeaver"),
@@ -245,7 +245,7 @@ ui <- navbarPage(
                tags$h3("")
             ),
             tabPanel(
-               "Exit Destination",
+               title = "Exit Destination",
                tags$h2("To which destinations did clients exit?"),
                tags$h2(textOutput("destPos")),
                plotOutput("destPlot"),
