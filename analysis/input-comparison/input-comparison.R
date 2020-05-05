@@ -21,40 +21,21 @@ config <- config::get()
 # ---- load-data -------------------------------
 ds_project_type <- readr::read_csv(config$project_type)
 
-# function to load the questions from each source
-input_report_data <- function(path_folder){
-  # path_folder = "./data-unshared/raw/CSV-APR_2019"
-  # path_folder = "./data-unshared/raw/Sample-APR"
+dto <- readr::read_rds("./data-unshared/derived/sample-reports.rds")
+rep_old <- dto$old
+rep_new <- dto$new
 
-  path_files <- list.files(path_folder, full.names = T) %>% sort()
-  dto <- list()
-  for(item_i in seq_along(path_files)){
-    # item_i <- 1
-    item_path <- path_files[item_i]
-    item_name <- item_path %>% basename() %>% stringr::str_replace(".csv","") %>% tolower()
-    dto[[item_name]] <- read.csv(item_path,  header=TRUE,stringsAsFactors = FALSE)
-  }
-  return(dto)
-}
-# load both sources.
-allQuestions_old <- input_report_data("./data-unshared/raw/Sample-APR")
-# allQuestions_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
-
-names(all)
-
-allQuestions_old %>% purrr::map(row.names)
-# allQuestions_new %>% purrr::map(row.names)
-# dto <- allQuestions_new
-
-# allQuestions_old[["q5a"]] %>% row.names()
+rep_old %>% purrr::map(row.names)
 # ---- new-input ------------------
-base::source("./manipulation/question-greeter.R")
-allQuestions_new <- dto$data
 
-# ----- -------
-# allQuestions_new[["q7a"]] %>% glimpse()
-# allQuestions_old[["q7a"]] %>% glimpse()
+# ---- output-names ----------
+# if(is.null(input$aprZip))
+#   return("Select an APR to Begin")
+# as.character(allQuestions()[["q4a"]][2,2])
+as.character(rep_old[["q4a"]][2,2])
+as.character(rep_new[["q4a"]][1,3])
 
+project_name <- rep_new[["q4a"]] %>% dplyr::pull("Project.Name")
 # ---- -------
 # Clients exiting to permanent destinations
 allQuestions_new[["q4a"]] %>% glimpse()
