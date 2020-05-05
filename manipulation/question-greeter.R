@@ -17,8 +17,32 @@ library(magrittr) # enables piping : %>%
 # source("./scripts/graphing/graph-presets.R") # fonts, colors, themes
 config <- config::get()
 # ---- declare-globals --------------------------
+path_to_old_report <- "./data-unshared/raw/Sample-APR"
+path_to_new_report <- "./data-unshared/raw/CSV-APR_2019"
 
-# ---- load-data -------------------------------
+# ---- load-data-old-report --------------
+# function to load the questions from each source
+input_report_data <- function(path_folder){
+  # path_folder = "./data-unshared/raw/CSV-APR_2019"
+  # path_folder = "./data-unshared/raw/Sample-APR"
+
+  path_files <- list.files(path_folder, full.names = T) %>% sort()
+  dto <- list()
+  for(item_i in seq_along(path_files)){
+    # item_i <- 1
+    item_path <- path_files[item_i]
+    item_name <- item_path %>% basename() %>% stringr::str_replace(".csv","") %>% tolower()
+    dto[[item_name]] <- read.csv(item_path,  header=TRUE,stringsAsFactors = FALSE)
+  }
+  return(dto)
+}
+# load both sources.
+allQuestions_old <- input_report_data(path_to_old_report)
+# allQuestions_new <- input_report_data("./data-unshared/raw/CSV-APR_2019")
+
+
+
+# ---- load-data-new-report -------------------------------
 # function to load the questions from each source
 list_input_files <- function(path_folder){
   # path_folder = "./data-unshared/raw/CSV-APR_2019"
@@ -37,7 +61,7 @@ list_input_files <- function(path_folder){
 }
 # load both sources.
 # allQuestions_old <- list_input_files("./data-unshared/raw/Sample-APR")
-allQuestions_new <- list_input_files("./data-unshared/raw/CSV-APR_2019")
+allQuestions_new <- list_input_files(path_to_new_report)
 dto <- allQuestions_new
 # ---- ---------------------
 #
@@ -75,17 +99,17 @@ replace_quotes <- function(d){
   return(d_out)
 }
 
-lsd <- dto
-# question_names <- names(dto)
-qnum <- 19
-qname <- dto[["path"]][qnum] %>% names()
-
-exceptions <- c(15,29,38,50,52)
-# exceptions <- c(57)
-question_position <- seq_along(dto[["path"]] )
-without_exceptions <- setdiff(question_position, exceptions)
-
-
+# # lsd <- dto
+# # question_names <- names(dto)
+# qnum <- 19
+# qname <- dto[["path"]][qnum] %>% names()
+#
+# exceptions <- c(15,29,38,50,52)
+# # exceptions <- c(57)
+# question_position <- seq_along(dto[["path"]] )
+# without_exceptions <- setdiff(question_position, exceptions)
+#
+# ---- tweak-data-new --------------------
 dto[["path"]][15] %>% names()
 dto[["path"]][29] %>% names()
 dto[["path"]][38] %>% names()
@@ -144,4 +168,12 @@ for(q_name in names(dto[["path"]]) ){
 # dto[["data"]][["q27d"]] %>% View()
 # dto[["data"]][["q27f"]] %>% View()
 allQuestions_new <- dto[["data"]]
+
+# ---- save-to-disk ------------
+list(
+  "old" = allQuestions_old,
+  "new" = allQuestions_new
+) %>%
+  readr::write_rds("./data-unshared/derived/sample-reports.rds")
+
 
