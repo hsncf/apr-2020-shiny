@@ -65,6 +65,47 @@ totalPerson <- rep_new[["q7a"]] %>%
   dplyr::pull("Total")
 paste("Total Clients:",totalPersons)
 
+
+# ---- homelessPer ---------------
+# Clients Entering from Homeless Situations
+
+# adults   <- allQuestions()[["q7a"]][1,2]
+# children <- allQuestions()[["q7a"]][2,2]
+# childHoH <- allQuestions()[["q5a"]][15,2]
+# # (allQuestions()[["q15"]][7,2])
+# paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions()[["q15"]][7,2]/(adults+childHoH)))
+
+adults   <- rep_old[["q7a"]][1,2]
+children <- rep_old[["q7a"]][2,2]
+childHoH <- rep_old[["q5a"]][15,1]
+# (allQuestions()[["q15"]][7,2])
+paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*rep_old[["q15"]][7,2]/(adults+childHoH)))
+
+
+
+# adults <- allQuestions_new[["q7a"]][1,2]
+adults <- rep_new[["q7a"]] %>%
+  dplyr::filter(X == "Adults") %>%
+  dplyr::pull("Total")
+# children <- allQuestions_new[["q7a"]][2,2]
+children <- rep_new[["q7a"]] %>% ### THIS VALUE IS NOT USED IN CALCULATION. CHECK WITH TINO
+  dplyr::filter(X == "Children") %>%
+  dplyr::pull("Total")
+# childHoH <- allQuestions_new[["q5a"]][15,2]
+childHoH <- rep_new[["q5a"]] %>%
+  dplyr::filter(V1 == "Number of Child and Unknown-Age Heads of Household") %>%
+  dplyr::pull(V2)
+subsection_total <- rep_new[["q15"]] %>%
+  dplyr::filter(category == "Homeless Situations", X == "Subtotal") %>%
+  dplyr::pull("Total")
+
+paste(
+  "Clients Entering from Homeless Situations:"
+  ,sprintf("%1.0f%%",100*subsection_total/( adults + childHoH) )
+)
+
+
+
 # ---- -------
 # Clients exiting to permanent destinations
 allQuestions_new[["q4a"]] %>% glimpse()
@@ -144,33 +185,6 @@ allQuestions_new[["q19a2"]] %>% View()
 
 
 # ----- --------------------
-# Clients Entering from Homeless Situations
-
-adults <- allQuestions_old[["q7a"]][1,2]
-children <- allQuestions_old[["q7a"]][2,2]
-childHoH <- allQuestions_old[["q5a"]][15,1] #%>% View()
-paste("Clients Entering from Homeless Situations:",sprintf("%1.0f%%",100*allQuestions_old[["q15"]][7,2]/(adults+childHoH)))
-
-# adults <- allQuestions_new[["q7a"]][1,2]
-adults <- allQuestions_new[["q7a"]] %>%
-  dplyr::filter(X == "Adults") %>%
-  dplyr::pull(Total)
-# children <- allQuestions_new[["q7a"]][2,2]
-children <- allQuestions_new[["q7a"]] %>% ### THIS VALUE IS NOT USED IN CALCULATION. CHECK WITH TINO
-    dplyr::filter(X == "Children") %>%
-    dplyr::pull(Total)
-# childHoH <- allQuestions_new[["q5a"]][15,2]
-childHoH <- allQuestions_new[["q5a"]] %>%
-  dplyr::filter(V1 == "Number of Child and Unknown-Age Heads of Household") %>%
-  dplyr::pull(V2)
-subsection_total <- allQuestions_new[["q15"]] %>%
-  dplyr::filter(category == "Homeless Situations", X == "Subtotal") %>%
-  dplyr::pull(Total)
-
-paste(
-  "Clients Entering from Homeless Situations:"
-  ,sprintf("%1.0f%%",100*subsection_total/(adults+childHoH) )
-)
 
 
 
@@ -235,77 +249,3 @@ plot_ly(x=c(" Non-Latino"," Hispanic/Latino","DK/R","Missing"),
          yaxis = list(title ="Client Count"))
 
 
-# ---- q-list -------------
-  # Comment out the questions that are breaking input, may need to add back in
-  # with an error checking function
-  # q19a3=read.csv("Q19a3.csv",header=TRUE,stringsAsFactors = FALSE),
-  # q23a=read.csv("Q23a.csv",header=TRUE,stringsAsFactors = FALSE),
-  # q23b=read.csv("Q23b.csv",header=TRUE,stringsAsFactors = FALSE),
-folder_path <- "./data-unshared/raw/Sample-APR/"
-
-  q4a=read.csv   (paste0(folder_path,"Q4a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  # q4a=read.csv   (paste0(folder_path,"Q4a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q5a=read.csv   (paste0(folder_path,"Q5a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q6a=read.csv   (paste0(folder_path,"Q6a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q6b=read.csv   (paste0(folder_path,"Q6b.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q6c=read.csv   (paste0(folder_path,"Q6c.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q6d=read.csv   (paste0(folder_path,"Q6d.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q6e=read.csv   (paste0(folder_path,"Q6e.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q6f=read.csv   (paste0(folder_path,"Q6f.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q7a=read.csv   (paste0(folder_path,"Q7a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q7b=read.csv   (paste0(folder_path,"Q7b.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q8a=read.csv   (paste0(folder_path,"Q8a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q8b=read.csv   (paste0(folder_path,"Q8b.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q9a=read.csv   (paste0(folder_path,"Q9a.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q9b=read.csv   (paste0(folder_path,"Q9b.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q10a=read.csv  (paste0(folder_path,"Q10a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q10b=read.csv  (paste0(folder_path,"Q10b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q10c=read.csv  (paste0(folder_path,"Q10c.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q11=read.csv   (paste0(folder_path,"Q11.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q12a=read.csv  (paste0(folder_path,"Q12a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q12b=read.csv  (paste0(folder_path,"Q12b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q13a1=read.csv (paste0(folder_path,"Q13a1.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q13a2=read.csv (paste0(folder_path,"Q13a2.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q13b1=read.csv (paste0(folder_path,"Q13b1.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q13b2=read.csv (paste0(folder_path,"Q13b2.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q13c1=read.csv (paste0(folder_path,"Q13c1.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q13c2=read.csv (paste0(folder_path,"Q13c2.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q14a=read.csv  (paste0(folder_path,"Q14a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q14b=read.csv  (paste0(folder_path,"Q14b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q15=read.csv   (paste0(folder_path,"Q15.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q16=read.csv   (paste0(folder_path,"Q16.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q17=read.csv   (paste0(folder_path,"Q17.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q18=read.csv   (paste0(folder_path,"Q18.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q19a1=read.csv (paste0(folder_path,"Q19a1.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q19a2=read.csv (paste0(folder_path,"Q19a2.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q19a3=read.csv (paste0(folder_path,"Q19a3.csv"),header=TRUE,stringsAsFactors = FALSE) # missing in the new
-  q20a=read.csv  (paste0(folder_path,"Q20a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q20b=read.csv  (paste0(folder_path,"Q20b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q21=read.csv   (paste0(folder_path,"Q21.csv"),  header=TRUE,stringsAsFactors = FALSE)
-  q22a1=read.csv (paste0(folder_path,"Q22a1.csv"),header=TRUE,stringsAsFactors = FALSE)
-  q22b=read.csv  (paste0(folder_path,"Q22b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q23a=read.csv  (paste0(folder_path,"Q23a.csv"), header=TRUE,stringsAsFactors = FALSE)# missing in the new
-  q23b=read.csv  (paste0(folder_path,"Q23b.csv"), header=TRUE,stringsAsFactors = FALSE)# missing in the new
-  q25a=read.csv  (paste0(folder_path,"Q25a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25b=read.csv  (paste0(folder_path,"Q25b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25c=read.csv  (paste0(folder_path,"Q25c.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25d=read.csv  (paste0(folder_path,"Q25d.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25e=read.csv  (paste0(folder_path,"Q25e.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25f=read.csv  (paste0(folder_path,"Q25f.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25g=read.csv  (paste0(folder_path,"Q25g.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25h=read.csv  (paste0(folder_path,"Q25h.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q25i=read.csv  (paste0(folder_path,"Q25i.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26a=read.csv  (paste0(folder_path,"Q26a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26b=read.csv  (paste0(folder_path,"Q26b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26c=read.csv  (paste0(folder_path,"Q26c.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26d=read.csv  (paste0(folder_path,"Q26d.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26e=read.csv  (paste0(folder_path,"Q26e.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26f=read.csv  (paste0(folder_path,"Q26f.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26g=read.csv  (paste0(folder_path,"Q26g.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q26h=read.csv  (paste0(folder_path,"Q26h.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q27a=read.csv  (paste0(folder_path,"Q27a.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q27b=read.csv  (paste0(folder_path,"Q27b.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q27c=read.csv  (paste0(folder_path,"Q27c.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q27d=read.csv  (paste0(folder_path,"Q27d.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q27e=read.csv  (paste0(folder_path,"Q27e.csv"), header=TRUE,stringsAsFactors = FALSE)
-  q27f=read.csv  (paste0(folder_path,"Q27f.csv"), header=TRUE,stringsAsFactors = FALSE)
