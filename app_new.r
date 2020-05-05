@@ -657,15 +657,50 @@ server <- function(input, output) {
       paste("Percentage of Error Rate for Personally Identifiable Information: ",pii,"%")
    })
    output$dqInc <- renderText({
-      if(is.null(input$aprZip))
+      # if(is.null(input$aprZip))
+      #    return(NULL)
+      # incHousingMissing <- sum(allQuestions()[["q6c"]][,2])
+      # HoH <- allQuestions()[["q5a"]][14,1] + allQuestions()[["q5a"]][15,1]
+      # leavers <- allQuestions()[["q5a"]][5,1]
+      # stayersHohAdult <- allQuestions()[["q5a"]][16,1]
+      # leaversHohAdult <- allQuestions()[["q5a"]][7,1]
+      # #paste("Data Quality for Income and Housing Data Quality: ", sprintf("%1.2f%%", 100*(1-(piiMissing/(6*allQuestions()[["q5a"]][1,1])))))
+      # paste("Data Quality for Income and Housing Data Quality: ", sprintf("%1.2f%%", 100*(1-(incHousingMissing/(HoH+leavers+stayersHohAdult+leaversHohAdult)))))
+      if( is.null(input$aprZip) ){
          return(NULL)
-      incHousingMissing <- sum(allQuestions()[["q6c"]][,2])
-      HoH <- allQuestions()[["q5a"]][14,1] + allQuestions()[["q5a"]][15,1]
-      leavers <- allQuestions()[["q5a"]][5,1]
-      stayersHohAdult <- allQuestions()[["q5a"]][16,1]
-      leaversHohAdult <- allQuestions()[["q5a"]][7,1]
-      #paste("Data Quality for Income and Housing Data Quality: ", sprintf("%1.2f%%", 100*(1-(piiMissing/(6*allQuestions()[["q5a"]][1,1])))))
-      paste("Data Quality for Income and Housing Data Quality: ", sprintf("%1.2f%%", 100*(1-(incHousingMissing/(HoH+leavers+stayersHohAdult+leaversHohAdult)))))
+      }else{
+      incHousingMissing <- rep_new[["q6c"]] %>%
+         dplyr::summarize(sum = sum(`Error.Count`)) %>%
+         dplyr::pull("sum")
+      HoH <- (
+         rep_new[["q5a"]] %>%
+            dplyr::filter(
+               V1 == "Number of Child and Unknown-Age Heads of Household"
+            ) %>% dplyr::pull(V2)
+         +
+            rep_new[["q5a"]] %>%
+            dplyr::filter(
+               V1 == "Number of Adult Heads of Household"
+            ) %>% dplyr::pull(V2)
+      )
+      leavers <- rep_new[["q5a"]] %>%
+         dplyr::filter(
+            V1 == "Number of Leavers"
+         ) %>% dplyr::pull(V2)
+      stayersHohAdult <- rep_new[["q5a"]] %>%
+         dplyr::filter(
+            V1 == "Heads of Households and Adult Stayers in the Project 365 Days or More"
+         ) %>% dplyr::pull(V2)
+      leaversHohAdult <- rep_new[["q5a"]] %>%
+         dplyr::filter(
+            V1 == "Number of Adult and Head of Household Leavers"
+         ) %>% dplyr::pull(V2)
+
+      paste(
+         "Data Quality for Income and Housing Data Quality: ",
+         sprintf( "%1.2f%%", 100*(1 - ( incHousingMissing / (HoH + leavers+stayersHohAdult + leaversHohAdult) ) ) )
+      )
+      }
    })
    # output$dqUde <- renderText({
    #   if(is.null(input$aprZip))
