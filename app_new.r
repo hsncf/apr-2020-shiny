@@ -39,191 +39,237 @@ replace_quotes <- function(d){
    return(d_out)
 }
 
+# ---- ui --------------
 
-ui <- navbarPage(title = "Explore your Annual Performance Report",
-                 theme = shinytheme("lumen"),
-                 tabPanel(title="Summary",
-                          sidebarLayout(
-                             sidebarPanel(
-                                tags$img(align = "left", height = 200, width = 200, src="HSNlogo1.jpg"),
-                                h3("Upload Your APR to Analyze:"),
-                                fileInput(inputId="aprZip", "Choose .zip file", accept = c("application/x-compressed","application/x-zip-compressed
-                                                                       application/zip","multipart/x-zip","application/octet-stream",".zip"))
-                                #downloadButton("report","Generate report")
-                             ),
-                             mainPanel(
-                                h2(textOutput("names"),style="color: #09A0B2"),
-                                h4(textOutput("type")),
-                                h3(textOutput("clientCounts")),
-                                h4(textOutput("homelessPer")),
-                                h4(textOutput("incSummary")),
-                                h4(textOutput("incSummary2")),
-                                h4(textOutput("destPos2"))
-                             )
-                          )
-                 ),
-                 tabPanel(title = "Data Quality",
-                          sidebarPanel(
-                             tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-                             h2(textOutput("name1"),style="color: #09A0B2"),
-                             tags$br(),width = 3
-                          ),
-                          mainPanel(
-                             tabsetPanel(
-                                tabPanel("Personal Identity Information",
-                                         h3(textOutput("dq")),
-                                         column(4,gaugeOutput("piigauge")),
-                                         column(8,plotlyOutput("piiPlot")),
-                                         tags$br(),
-                                         dataTableOutput("PIITable")),
-                                tabPanel("Income and Housing",
-                                         h3(textOutput("dqInc")),
-                                         tags$br(),
-                                         column(4,gaugeOutput("entryGauge")),
-                                         column(4,gaugeOutput("annualGauge")),
-                                         column(4,gaugeOutput("exitGauge")),
-                                         column(12,plotlyOutput("incDqPlot"))
-                                ),
-                                tabPanel("Universal Data Elements",
-                                         tags$h3("Data Quality for Universal Data Elements:"),
-                                         column(12,plotlyOutput("udePlot")),
-                                         tags$br(),
-                                         dataTableOutput("UDETable")),
-                                tabPanel("Timeliness",
-                                         tags$h3("Timeliness of Data Entry within 3 days"),
-                                         h4(textOutput("timeA")),
-                                         column(4,gaugeOutput("timeAgauge")),
-                                         column(8,plotlyOutput("time1")),
-                                         tags$br(),
-                                         tags$h3("Timeliness of Data Entry after 3 days"),
-                                         h4(textOutput("timeB")),
-                                         column(4,gaugeOutput("timeBgauge")),
-                                         column(8,plotlyOutput("time2"))),
-                                tabPanel("Chronic Homelesness",
-                                         tags$h3("Percentage of Error Rate for Chronic Homeless"),
-                                         tags$br(),
-                                         column(6,gaugeOutput("dqchronic")),
-                                         column(12,dataTableOutput("dqchronicTable")))
-                             )
-                          )
-                 ),
-                 tabPanel(title = "Clients Served",
-                          sidebarPanel(
-                             tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-                             h2(textOutput("name2"),style="color: #09A0B2"),
-                             tags$br(),width = 3
-                          ),
-                          mainPanel(
-                             tabsetPanel(
-                                tabPanel("Clients Served",
-                                         h3(textOutput("clientCounts2")),
-                                         plotlyOutput("served")),
-                                tabPanel("Chronically Homeless Served",
-                                         h3(textOutput("chronicNum")),
-                                         h3(textOutput("chronicHOHNum")),
-                                         plotlyOutput("chronic")),
-                                tabPanel("Unemployed Clients Served",
-                                         h3(textOutput("unemployed")),
-                                         h3(textOutput("employed")),
-                                         plotlyOutput("unemp")),
-                                tabPanel("Report Validations Table",
-                                         tags$br(),
-                                         dataTableOutput("newTryTable"))
-                             )
-                          )
-                 ),
-                 tabPanel(title = "Client Demographics",
-                          sidebarPanel(
-                             tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-                             h2(textOutput("name3")),
-                             tags$br(),width = 3
-                          ),
-                          mainPanel(
-                             tabsetPanel(
-                                tabPanel("Age",
-                                         tags$h2("What are the Ages of Clients in the Project?"),
-                                         h3(textOutput("adultKidCount")),
-                                         plotlyOutput("plot")),
-                                tabPanel("Race",
-                                         tags$h2("Client Race"),
-                                         plotlyOutput("racePlot")),
-                                tabPanel("Ethnicity",
-                                         tags$h2("Client Ethnicity"),
-                                         plotlyOutput("ethPlot")),
-                                tabPanel("Gender",
-                                         plotlyOutput("genderPlot"))
-                             )
-                          )
-                 ),
-                 tabPanel(title = "Other Data",
-                          sidebarPanel(
-                             tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-                             h2(textOutput("name4")),
-                             tags$br(),width = 3
-                          ),
-                          mainPanel(
-                             tabsetPanel(
-                                tabPanel("PIT",
-                                         tags$h3("Point in Time Counts of Persons and Households"),
-                                         column(12,plotlyOutput("pit"))
-                                ),
-                                tabPanel("Disabilities",
-                                         tags$h2("What Health and Mental Health Conditions Did Clients Have at Entry?"),
-                                         plotlyOutput("phyPlot")
-                                ),
-                                tabPanel("Residence Prior",
-                                         plotlyOutput("livSitPlot")
-                                ),
-                                tabPanel("Income Sources",
-                                         plotlyOutput("incStatus"),
-                                         tags$h3("Adult Stayers (365 days or more)"),
-                                         tableOutput("incStayTable"),
-                                         tags$h4(textOutput("eIncStay")),
-                                         tags$h3("Adult Leavers"),
-                                         tableOutput("incLeaveTable"),
-                                         tags$h4(textOutput("eIncLeave"))
-                                ),
-                                tabPanel("Non-Cash and Health Insurance",
-                                         tags$h3("Non-Cash Benefits and Health Insurance"),
-                                         plotOutput("benefitEntry"),
-                                         plotOutput("insStatus"),
-                                         plotOutput("healthIns")
-                                ),
-                                tabPanel("Length of Participation",
-                                         tags$h3("Length of Participation in Project"),
-                                         plotOutput("lengthTotal"),
-                                         plotOutput("lengthLeaver"),
-                                         plotOutput("lengthStayer"),
-                                         tags$h3("")
-                                ),
-                                tabPanel("Exit Destination",
-                                         tags$h2("To which destinations did clients exit?"),
-                                         tags$h2(textOutput("destPos")),
-                                         plotOutput("destPlot"),
-                                         tags$h2(textOutput("names_exit"),style="color: #09A0B2"),
-                                         tags$h4(textOutput("type_exit"))
-                                )
-
-                             )
-                          )
-                 ),
-
-
-
-                 tabPanel(title = "About",
-                          tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-                          tags$h3("About the Annual Performance Report"),
-                          tags$h5("HUD requires CoC-funded projects to complete an Annual Performance Report (APR).  HUD uses the APR to track performance of CoC-funded projects.  We encourage you to use it to track your own performance as well!"),
-                          tags$h5("Projects must upload a .zip file that contains 66 .csv files to Sage for APR submission."),
-                          tags$a(href="https://www.hudexchange.info/programs/e-snaps/guides/apr/#sage-hmis-reporting-repository","Learn more",target="_blank"),
-                          tags$h3("About this Tool"),
-                          tags$h5("This tool allows you to see the data that you'll be submitting to HUD in your APR upload to Sage. Simply upload the .zip file and explore!"),
-                          tags$a(href="https://www.hmiscfl.org/","Created by Homeless Service Netwotrk of Central Florida",target="_blank"),
-                          tags$h3("APR Version"),
-                          tags$h5("Consistent with Version 1.2 of HUD APR specifications. Updated 11/6/2017.")
-                 )
-)
-
+ui <- navbarPage(
+   title = "Explore your Annual Performance Report",
+   theme = shinytheme("united"),
+   # SUMMARY
+   tabPanel(
+      title="Summary",
+      sidebarLayout(
+         sidebarPanel(
+            tags$img(align = "left",height = 200, width = 200, src="HSN-logo-color.JPG"),
+            h3("Upload Your APR to Analyze:"),
+            fileInput(
+               inputId="aprZip", "Choose .zip file",
+               accept = c(
+                  "application/x-compressed",
+                  "application/x-zip-compressed application/zip",
+                  "multipart/x-zip","application/octet-stream",".zip"
+               )
+            )
+            #downloadButton("report","Generate report")
+         ),
+         mainPanel(
+            h2(textOutput("names"),style="color: #09A0B2"),
+            h4(textOutput("type")),
+            h3(textOutput("clientCounts")),
+            h4(textOutput("homelessPer")),
+            h4(textOutput("incSummary")),
+            h4(textOutput("incSummary2")),
+            h4(textOutput("destPos2"))
+         )
+      )
+   ),
+   # DATA QUALITY
+   tabPanel(
+      title = "Data Quality",
+      sidebarPanel(
+         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
+         h2(textOutput("name1"),style="color: #09A0B2"),
+         tags$br(),
+         width = 3
+      ),
+      mainPanel(
+         tabsetPanel(
+            tabPanel(
+               "Personal Identity Information",
+               h3(textOutput("dq")),
+               column(4,gaugeOutput("piigauge")),
+               column(8,plotlyOutput("piiPlot")),
+               tags$br(),
+               dataTableOutput("PIITable")
+            ),
+            tabPanel(
+               "Income and Housing",
+               h3(textOutput("dqInc")),
+               tags$br(),
+               column(4,gaugeOutput("entryGauge")),
+               column(4,gaugeOutput("annualGauge")),
+               column(4,gaugeOutput("exitGauge")),
+               column(12,plotlyOutput("incDqPlot"))
+            ),
+            tabPanel(
+               "Universal Data Elements",
+               tags$h3("Data Quality for Universal Data Elements:"),
+               column(12,plotlyOutput("udePlot")),
+               tags$br(),
+               dataTableOutput("UDETable")
+            ),
+            tabPanel(
+               "Timeliness",
+               tags$h3("Timeliness of Data Entry within 3 days"),
+               h4(textOutput("timeA")),
+               column(4,gaugeOutput("timeAgauge")),
+               column(8,plotlyOutput("time1")),
+               tags$br(),
+               tags$h3("Timeliness of Data Entry after 3 days"),
+               h4(textOutput("timeB")),
+               column(4,gaugeOutput("timeBgauge")),
+               column(8,plotlyOutput("time2"))
+            ),
+            tabPanel(
+               "Chronic Homelesness",
+               tags$h3("Percentage of Error Rate for Chronic Homeless"),
+               tags$br(),
+               column(6,gaugeOutput("dqchronic")),
+               column(12,dataTableOutput("dqchronicTable"))
+            )
+         ) # closes tabsetPanel
+      ) # closes mainPanel
+   ), # closes tabPanel
+   # CLIENTS SERVED
+   tabPanel(
+      title = "Clients Served",
+      sidebarPanel(
+         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
+         h2(textOutput("name2"), style="color: #09A0B2"),
+         tags$br(), width = 3
+      ),
+      mainPanel(
+         tabsetPanel(
+            tabPanel(
+               "Clients Served",
+               h3(textOutput("clientCounts2")),
+               plotlyOutput("served")
+            ),
+            tabPanel(
+               "Chronically Homeless Served",
+               h3(textOutput("chronicNum")),
+               h3(textOutput("chronicHOHNum")),
+               plotlyOutput("chronic")
+            ),
+            tabPanel(
+               "Unemployed Clients Served",
+               h3(textOutput("unemployed")),
+               h3(textOutput("employed")),
+               plotlyOutput("unemp")
+            ),
+            tabPanel(
+               "Report Validations Table",
+               tags$br(),
+               dataTableOutput("newTryTable")
+            )
+         ) # close tabsetPanel
+      ) # close mainPanel
+   ), # close tabPanel
+   tabPanel(
+      title = "Client Demographics",
+      sidebarPanel(
+         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
+         h2(textOutput("name3")),
+         tags$br(),width = 3
+      ),
+      mainPanel(
+         tabsetPanel(
+            tabPanel(
+               "Age",
+               tags$h2("What are the Ages of Clients in the Project?"),
+               h3(textOutput("adultKidCount")),
+               plotlyOutput("plot")
+            ),
+            tabPanel(
+               "Race",
+               tags$h2("Client Race"),
+               plotlyOutput("racePlot")
+            ),
+            tabPanel(
+               "Ethnicity",
+               tags$h2("Client Ethnicity"),
+               plotlyOutput("ethPlot")
+            ),
+            tabPanel(
+               "Gender",
+               plotlyOutput("genderPlot")
+            )
+         ) # close tabsetPanel
+      ) # close mainPanel
+   ), # close tabPanel
+   tabPanel(
+      title = "Other Data",
+      sidebarPanel(
+         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
+         h2(textOutput("name4")),
+         tags$br(),width = 3
+      ),
+      mainPanel(
+         tabsetPanel(
+            tabPanel(
+               "PIT",
+               tags$h3("Point in Time Counts of Persons and Households"),
+               column(12,plotlyOutput("pit"))
+            ),
+            tabPanel(
+               "Disabilities",
+               tags$h2("What Health and Mental Health Conditions Did Clients Have at Entry?"),
+               plotlyOutput("phyPlot")
+            ),
+            tabPanel(
+               "Residence Prior",
+               plotlyOutput("livSitPlot")
+            ),
+            tabPanel(
+               "Income Sources",
+               plotlyOutput("incStatus"),
+               tags$h3("Adult Stayers (365 days or more)"),
+               tableOutput("incStayTable"),
+               tags$h4(textOutput("eIncStay")),
+               tags$h3("Adult Leavers"),
+               tableOutput("incLeaveTable"),
+               tags$h4(textOutput("eIncLeave"))
+            ),
+            tabPanel(
+               "Non-Cash and Health Insurance",
+               tags$h3("Non-Cash Benefits and Health Insurance"),
+               plotOutput("benefitEntry"),
+               plotOutput("insStatus"),
+               plotOutput("healthIns")
+            ),
+            tabPanel(
+               "Length of Participation",
+               tags$h3("Length of Participation in Project"),
+               plotOutput("lengthTotal"),
+               plotOutput("lengthLeaver"),
+               plotOutput("lengthStayer"),
+               tags$h3("")
+            ),
+            tabPanel(
+               "Exit Destination",
+               tags$h2("To which destinations did clients exit?"),
+               tags$h2(textOutput("destPos")),
+               plotOutput("destPlot"),
+               tags$h2(textOutput("names_exit"),style="color: #09A0B2"),
+               tags$h4(textOutput("type_exit"))
+            )
+         ) # close tabsetPanel
+      ) # close mainPanel
+   ), # close tabPanel
+   tabPanel(
+      title = "About",
+      tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
+      tags$h3("About the Annual Performance Report"),
+      tags$h5("HUD requires CoC-funded projects to complete an Annual Performance Report (APR).  HUD uses the APR to track performance of CoC-funded projects.  We encourage you to use it to track your own performance as well!"),
+      tags$h5("Projects must upload a .zip file that contains 66 .csv files to Sage for APR submission."),
+      tags$a(href="https://www.hudexchange.info/programs/e-snaps/guides/apr/#sage-hmis-reporting-repository","Learn more",target="_blank"),
+      tags$h3("About this Tool"),
+      tags$h5("This tool allows you to see the data that you'll be submitting to HUD in your APR upload to Sage. Simply upload the .zip file and explore!"),
+      tags$a(href="https://www.hmiscfl.org/","Created by Homeless Service Netwotrk of Central Florida",target="_blank"),
+      tags$h3("APR Version"),
+      tags$h5("Consistent with Version 1.2 of HUD APR specifications. Updated 11/6/2017.")
+   ) # close tabPanel
+) # close navbarPage
+# ---- server ---------------
 server <- function(input, output) {
    allQuestions <- reactive({
       td <- tempdir()
