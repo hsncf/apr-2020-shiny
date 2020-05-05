@@ -677,10 +677,18 @@ server <- function(input, output) {
    #   paste("Data Quality for Universal Data Elements: ", sprintf("%1.2f%%", 100*(1-(udeMissing/(adults+3*all+HoH)))))
    # })
    output$clientCounts <- renderText({
-      if(is.null(input$aprZip))
+      # if(is.null(input$aprZip))
+      #    return(NULL)
+      # totalPersons <- allQuestions()[["q7a"]][5,2]
+      # paste("Total Clients:",totalPersons)
+      if( is.null(input$aprZip) ){
          return(NULL)
-      totalPersons <- allQuestions()[["q7a"]][5,2]
+      }else{
+      totalPerson <- rep_new[["q7a"]] %>%
+         dplyr::filter(X == "Total") %>%
+         dplyr::pull("Total")
       paste("Total Clients:",totalPersons)
+      }
    })
    output$clientCounts2 <- renderText({
       if(is.null(input$aprZip))
