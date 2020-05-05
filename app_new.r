@@ -271,6 +271,7 @@ ui <- navbarPage(
 ) # close navbarPage
 # ---- server ---------------
 server <- function(input, output) {
+   ds_project_type <- readr::read_csv(config$project_type)
    allQuestions <- reactive({
       td <- tempdir()
       unzip(input$aprZip$datapath, exdir=td, overwrite=TRUE)
@@ -577,7 +578,7 @@ server <- function(input, output) {
          return("Select an APR to Begin")
       }else{
       # as.character(allQuestions()[["q4a"]][1,3])
-      project_name <- rep_new[["q4a"]] %>% dplyr::pull("Project.Name")
+      project_name <- allQuestions()[["q4a"]] %>% dplyr::pull("Project.Name")
       print(project_name)
       }
    })
@@ -635,7 +636,8 @@ server <- function(input, output) {
       if( is.null(input$aprZip) ){
          return(NULL)
       }else{
-         ds_project_type <- readr::read_csv(config$project_type)
+         # browser()
+         # ds_project_type <- readr::read_csv(config$project_type)
          project_type_id_input <-  allQuestions()[["q4a"]] %>% dplyr::pull("HMIS.Project.Type")
          project_type <- ds_project_type %>%
             dplyr::filter(project_type_id == project_type_id_input) %>%
@@ -719,7 +721,7 @@ server <- function(input, output) {
       if( is.null(input$aprZip) ){
          return(NULL)
       }else{
-      totalPerson <- rep_new[["q7a"]] %>%
+      totalPersons <- allQuestions()[["q7a"]] %>%
          dplyr::filter(X == "Total") %>%
          dplyr::pull("Total")
       paste("Total Clients:",totalPersons)
@@ -775,13 +777,13 @@ server <- function(input, output) {
    output$incSummary <- renderText({
       if(is.null(input$aprZip))
          return("For more information, navigate to the 'About' tab")
-      paste("Pending clarification from Tino")
+      # paste("Pending clarification from Tino")
       # paste("Adults gaining or maintaining earned income:", sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[1]/allQuestions()[["q19a3"]][1,8]))
    })
    output$incSummary2 <- renderText({
       if(is.null(input$aprZip))
          return(NULL)
-      paste("Pending clarification from Tino")
+      # paste("Pending clarification from Tino")
       # paste( "Adults gaining or maintaining other income:",sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[3]/allQuestions()[["q19a3"]][1,8]))
    })
    output$destPos <- renderText({
