@@ -787,18 +787,46 @@ server <- function(input, output) {
       # paste( "Adults gaining or maintaining other income:",sprintf("%1.0f%%",100*rowSums(allQuestions()[["q19a3"]][1:5,4:6])[3]/allQuestions()[["q19a3"]][1,8]))
    })
    output$destPos <- renderText({
-      if(is.null(input$aprZip))
-         return(NULL)
-      projType <- as.numeric(allQuestions()[["q4a"]][4,2])
-      totalPersons <- allQuestions()[["q7a"]][5,2]
-      stayers <- allQuestions()[["q5a"]][8,1]
-      excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
-      goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
-      posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
-      posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
-      if(projType==3)
-         return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
-      paste("Clients exiting to permanent destinations:",posDestPer)
+      # if(is.null(input$aprZip))
+      #    return(NULL)
+      # projType <- as.numeric(allQuestions()[["q4a"]][4,2])
+      # totalPersons <- allQuestions()[["q7a"]][5,2]
+      # stayers <- allQuestions()[["q5a"]][8,1]
+      # excluded <- allQuestions()[["q23a"]][41,2] + allQuestions()[["q23b"]][41,2]
+      # goodDest <- allQuestions()[["q23a"]][13,2]+allQuestions()[["q23b"]][13,2]
+      # posDestPer <- sprintf("%1.2f%%",100*goodDest/(allQuestions()[["q23a"]][39,2]+allQuestions()[["q23b"]][39,2]-excluded))
+      # posDestStayPerPH <-sprintf("%1.2f%%",100*(goodDest+stayers)/(totalPersons-excluded))
+      # if(projType==3)
+      #    return(paste("Clients staying in PSH or exiting to permanent destinations:",posDestStayPerPH))
+      # paste("Clients exiting to permanent destinations:",posDestPer)
+      projType <- allQuestions()[["q4a"]] %>% dplyr::pull("HMIS.Project.Type")
+      totalPersons <- allQuestions()[["q7a"]] %>%
+         dplyr::filter(X == "Total") %>%
+         dplyr::pull("Total")
+      stayers <- allQuestions()[["q5a"]] %>%
+         dplyr::filter(V1 == "Number of Stayers") %>%
+         dplyr::pull("V2")
+      excluded <- allQuestions()[["q23c"]] %>%
+         dplyr::filter(category == "Total persons whose destinations excluded them from the calculation") %>%
+         dplyr::pull("Total")
+      goodDest <- allQuestions()[["q23c"]] %>%
+         dplyr::filter(category == "Permanent Destinations", X == "Subtotal") %>%
+         dplyr::pull("Total")
+      Total <- allQuestions()[["q23c"]] %>%
+         dplyr::filter(category == "Total", X == "Total") %>%
+         dplyr::pull("Total")
+      posDestPer <- sprintf( "%1.2f%%", 100 * ( goodDest / (Total - excluded) ) )
+      posDestStayPerPH <- sprintf( "%1.2f%%",100*(goodDest + stayers)/(totalPersons - excluded) )
+      if(projType==3){
+         return(
+            paste(
+               "Clients staying in PSH or exiting to permanent destinations:",
+               posDestStayPerPH
+            )
+         )
+      }else{
+         paste("Clients exiting to permanent destinations:",posDestPer)
+      }
    })
    output$destPos2 <- renderText({
       if(is.null(input$aprZip))
