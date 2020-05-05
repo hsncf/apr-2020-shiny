@@ -627,11 +627,21 @@ server <- function(input, output) {
       as.character(allQuestions()[["q4a"]][2,2])
    })
    output$type <- renderText({
-      if(is.null(input$aprZip))
+      # if(is.null(input$aprZip))
+      #    return(NULL)
+      # projType <- c("Emergency Shelter","Transitional Housing","PH - Permanent Supportive Housing","Street Outreach","RETIRED","Services Only","Other","Safe Haven","PH - Housing Only","PH - Housing with Services","Day Shelter","Homelessness Prevention","PH - Rapid Re-Housing","Coordinated Assessment")
+      # index <- as.numeric(allQuestions()[["q4a"]][1,5])
+      # projType[index]
+      if( is.null(input$aprZip) ){
          return(NULL)
-      projType <- c("Emergency Shelter","Transitional Housing","PH - Permanent Supportive Housing","Street Outreach","RETIRED","Services Only","Other","Safe Haven","PH - Housing Only","PH - Housing with Services","Day Shelter","Homelessness Prevention","PH - Rapid Re-Housing","Coordinated Assessment")
-      index <- as.numeric(allQuestions()[["q4a"]][1,5])
-      projType[index]
+      }else{
+         ds_project_type <- readr::read_csv(config$project_type)
+         project_type_id_input <-  allQuestions()[["q4a"]] %>% dplyr::pull("HMIS.Project.Type")
+         project_type <- ds_project_type %>%
+            dplyr::filter(project_type_id == project_type_id_input) %>%
+            dplyr::pull(project_type_label)
+         print(project_type)
+      }
    })
    output$type_exit <- renderText({
       if(is.null(input$aprZip))
