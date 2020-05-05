@@ -163,6 +163,54 @@ if(projType==3){
 
 
 
+# ---- dqInc -------
+# incHousingMissing <- sum(allQuestions()[["q6c"]][,2])
+# HoH <- allQuestions()[["q5a"]][14,1] + allQuestions()[["q5a"]][15,1]
+# leavers <- allQuestions()[["q5a"]][5,1]
+# stayersHohAdult <- allQuestions()[["q5a"]][16,1]
+# leaversHohAdult <- allQuestions()[["q5a"]][7,1]
+
+incHousingMissing <- sum(rep_old[["q6c"]][,2])
+HoH <- rep_old[["q5a"]][14,1] + rep_old[["q5a"]][15,1]
+leavers <- rep_old[["q5a"]][5,1]
+stayersHohAdult <- rep_old[["q5a"]][16,1]
+leaversHohAdult <- rep_old[["q5a"]][7,1]
+
+
+incHousingMissing <- rep_new[["q6c"]] %>%
+  dplyr::summarize(sum = sum(`Error.Count`)) %>%
+  dplyr::pull("sum")
+HoH <- (
+  rep_new[["q5a"]] %>%
+    dplyr::filter(
+      V1 == "Number of Child and Unknown-Age Heads of Household"
+  ) %>% dplyr::pull(V2)
+  +
+  rep_new[["q5a"]] %>%
+    dplyr::filter(
+      V1 == "Number of Adult Heads of Household"
+    ) %>% dplyr::pull(V2)
+)
+leavers <- rep_new[["q5a"]] %>%
+  dplyr::filter(
+    V1 == "Number of Leavers"
+  ) %>% dplyr::pull(V2)
+stayersHohAdult <- rep_new[["q5a"]] %>%
+  dplyr::filter(
+    V1 == "Heads of Households and Adult Stayers in the Project 365 Days or More"
+  ) %>% dplyr::pull(V2)
+leaversHohAdult <- rep_new[["q5a"]] %>%
+  dplyr::filter(
+    V1 == "Number of Adult and Head of Household Leavers"
+  ) %>% dplyr::pull(V2)
+
+paste(
+  "Data Quality for Income and Housing Data Quality: ",
+  sprintf( "%1.2f%%", 100*(1 - ( incHousingMissing / (HoH + leavers+stayersHohAdult + leaversHohAdult) ) ) )
+)
+
+
+
 # ---- -------
 # Clients exiting to permanent destinations
 allQuestions_new[["q4a"]] %>% glimpse()
