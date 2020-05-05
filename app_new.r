@@ -427,52 +427,88 @@ server <- function(input, output) {
    # })
 
    output$print2 <- renderTable({
-      if(is.null(input$aprZip))
+      if( is.null(input$aprZip) )
          return(NULL)
       allQuestions()["q11"]
    })
    output$plot <-renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
-      plot_ly(x=c("  Under 5"," 5-12","13-17","18-24","25-34","35-44","45-54","55-61","62+"),
-              y=allQuestions()[["q11"]]$Total[1:9],
-              name="Age Distribution",type='bar')%>%
-         layout(xaxis = list(title = "Age Range"),
-                yaxis = list(title ="Client Count"))
+      plot_ly(
+         x    = c("  Under 5"," 5-12","13-17","18-24","25-34","35-44","45-54","55-61","62+"),
+         y    = allQuestions()[["q11"]]$Total[1:9],
+         name = "Age Distribution",
+         type = 'bar'
+      ) %>%
+         layout(
+            xaxis = list(title = "Age Range"),
+            yaxis = list(title = "Client Count")
+         )
    })
    output$racePlot <-renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
-      plot_ly(x=c(" White", " Black", "Asian", "Am. Indian","NHPI","Multiple","DK/R","Missing"),
-              y=allQuestions()[["q12a"]]$Total[1:8],
-              name='Race ',type='bar')%>%
-         layout(xaxis = list(title = "Race"),
-                yaxis = list(title ="Client Count"))
+      plot_ly(
+         x = c(" White", " Black", "Asian", "Am. Indian","NHPI","Multiple","DK/R","Missing"),
+         y = allQuestions()[["q12a"]]$Total[1:8],
+         name = 'Race ',
+         type='bar'
+      ) %>%
+         layout(
+            xaxis = list(title = "Race"),
+            yaxis = list(title ="Client Count")
+         )
    })
    output$ethPlot <-renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
-      plot_ly(x=c(" Non-Latino"," Hispanic/Latino","DK/R","Missing"),
-              y=allQuestions()[["q12b"]]$Total[1:4],
-              name="Ethnicity Distribution",type='bar')%>%
-         layout(xaxis = list(title = "Ethnicity"),
-                yaxis = list(title ="Client Count"))
+      plot_ly(
+         x    = c(" Non-Latino"," Hispanic/Latino","DK/R","Missing"),
+         y    = allQuestions()[["q12b"]]$Total[1:4],
+         name = "Ethnicity Distribution",
+         type = 'bar'
+      ) %>%
+         layout(
+            xaxis = list(title = "Ethnicity"),
+            yaxis = list(title ="Client Count")
+         )
    })
    output$genderPlot <- renderPlotly({
       if(is.null(input$aprZip))
          return(NULL)
-      y<-c("Male","Female"," Trans Female"," Trans Male"," Non-Binary","  DK/R ","  Missing")
-      adult<-allQuestions()[["q10a"]]$Total[1:7]
-      kid<-allQuestions()[["q10b"]]$Total[1:7]
-      dt<-data.frame(y,adult,kid)
-      plot_ly(dt,x=~adult,y=~y,type = 'bar', orientation='h',name = 'Adults',
-              marker=list(color='rgba(246,78,139,0.6)',
-                          line=list(color='rgba(246,78,139,1.0)',
-                                    width=3)))%>%
-         add_trace(x=~kid,y=~y,type = 'bar', orientation='h',name = 'Kids',
-                   marker=list(color='rgba(58,71,80,0.6)',
-                               line=list(color='rgba(58,71,80,1.0)',
-                                         width=3)))%>%
+      y     <- c("Male","Female"," Trans Female"," Trans Male"," Non-Binary","  DK/R ","  Missing")
+      adult <- allQuestions()[["q10a"]]$Total[1:7]
+      kid   <- allQuestions()[["q10b"]]$Total[1:7]
+      dt    <- data.frame(y,adult,kid)
+      plot_ly(
+         dt,
+         x           = ~adult,
+         y           = ~y,
+         type        = 'bar',
+         orientation = 'h',
+         name        = 'Adults',
+         marker      = list(
+            color = 'rgba(246,78,139,0.6)',
+            line  = list(
+               color = 'rgba(246,78,139,1.0)',
+               width = 3
+            )
+         )
+      ) %>%
+         add_trace(
+            x           = ~kid,
+            y           = ~y,
+            type        = 'bar',
+            orientation = 'h',
+            name        = 'Kids',
+            marker      = list(
+               color = 'rgba(58,71,80,0.6)',
+               line  = list(
+                  color='rgba(58,71,80,1.0)',
+                  width=3
+               )
+            )
+         )%>%
          layout(barmode='stack',
                 xaxis = list(title = "Client Count"),
                 yaxis = list(title =""))
