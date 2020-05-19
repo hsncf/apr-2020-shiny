@@ -49,7 +49,7 @@ ui <- navbarPage(
       title = "Summary",
       sidebarLayout(
          sidebarPanel(
-            tags$img(align = "left",height = 200, width = 200, src="HSN-logo-color.JPG"),
+            tags$img(align = "left",height = 200, width = 200, src="HSN-logo-color.PNG"),
             h3("Upload Your APR to Analyze:"),
             fileInput(
                inputId="aprZip", "Choose .zip file",
@@ -76,8 +76,8 @@ ui <- navbarPage(
    tabPanel(
       title = "Data Quality",
       sidebarPanel(
-         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-         h2(textOutput("name1"),style="color: #09A0B2"),
+         tags$img(height = 200, width = 200, src="HSN-logo-color.PNG"),
+         # h2(textOutput("name1"),style="color: #09A0B2"),
          tags$br(),
          width = 3
       ),
@@ -93,7 +93,7 @@ ui <- navbarPage(
             ),
             tabPanel(
                "Income and Housing",
-               h3(textOutput("dqInc")),
+               # h3(textOutput("dqInc")),  fix later
                tags$br(),
                column(4,gaugeOutput("entryGauge")),
                column(4,gaugeOutput("annualGauge")),
@@ -133,17 +133,17 @@ ui <- navbarPage(
    tabPanel(
       title = "Clients Served",
       sidebarPanel(
-         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-         h2(textOutput("name2"), style="color: #09A0B2"),
+         tags$img(height = 200, width = 200, src="HSN-logo-color.PNG"),
+         # h2(textOutput("name2"), style="color: #09A0B2"),
          tags$br(), width = 3
       ),
       mainPanel(
          tabsetPanel(
-            tabPanel(
-               "Clients Served",
-               h3(textOutput("clientCounts2")),
-               plotlyOutput("served")
-            ),
+            # tabPanel(
+            #    "Clients Served",
+            #    h3(textOutput("clientCounts2")),
+            #    plotlyOutput("served")
+            # ),
             tabPanel(
                "Chronically Homeless Served",
                h3(textOutput("chronicNum")),
@@ -167,8 +167,8 @@ ui <- navbarPage(
    tabPanel(
       title = "Client Demographics",
       sidebarPanel(
-         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-         h2(textOutput("name3")),
+         tags$img(height = 200, width = 200, src="HSN-logo-color.PNG"),
+         # h2(textOutput("name3")),
          tags$br(),width = 3
       ),
       mainPanel(
@@ -199,8 +199,8 @@ ui <- navbarPage(
    tabPanel(
       title = "Other Data",
       sidebarPanel(
-         tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
-         h2(textOutput("name4")),
+         tags$img(height = 200, width = 200, src="HSN-logo-color.PNG"),
+         # h2(textOutput("name4")),
          tags$br(),width = 3
       ),
       mainPanel(
@@ -215,10 +215,10 @@ ui <- navbarPage(
                tags$h2("What Health and Mental Health Conditions Did Clients Have at Entry?"),
                plotlyOutput("phyPlot")
             ),
-            tabPanel(
-               title = "Residence Prior",
-               plotlyOutput("livSitPlot")
-            ),
+            # tabPanel( 
+            #    title = "Residence Prior",
+            #    plotlyOutput("livSitPlot")
+            # ),
             tabPanel(
                title = "Income Sources",
                plotlyOutput("incStatus"),
@@ -248,7 +248,7 @@ ui <- navbarPage(
                title = "Exit Destination",
                tags$h2("To which destinations did clients exit?"),
                tags$h2(textOutput("destPos")),
-               plotOutput("destPlot"),
+               # plotOutput("destPlot"),  need fix
                tags$h2(textOutput("names_exit"),style="color: #09A0B2"),
                tags$h4(textOutput("type_exit"))
             )
@@ -257,21 +257,29 @@ ui <- navbarPage(
    ), # close tabPanel
    tabPanel(
       title = "About",
-      tags$img(height = 200, width = 200, src="HSNlogo1.jpg"),
+      tags$img(height = 200, width = 200, src="HSN-logo-color.PNG"),
       tags$h3("About the Annual Performance Report"),
       tags$h5("HUD requires CoC-funded projects to complete an Annual Performance Report (APR).  HUD uses the APR to track performance of CoC-funded projects.  We encourage you to use it to track your own performance as well!"),
       tags$h5("Projects must upload a .zip file that contains 66 .csv files to Sage for APR submission."),
       tags$a(href="https://www.hudexchange.info/programs/e-snaps/guides/apr/#sage-hmis-reporting-repository","Learn more",target="_blank"),
       tags$h3("About this Tool"),
       tags$h5("This tool allows you to see the data that you'll be submitting to HUD in your APR upload to Sage. Simply upload the .zip file and explore!"),
-      tags$a(href="https://www.hmiscfl.org/","Created by Homeless Service Netwotrk of Central Florida",target="_blank"),
+      tags$h5("Created by Homeless Service Network of Central Florida in collaboration with the  Department of Health Management and Informatics and the Institute for Healthcare Improvement. UCF Team: William Belanger, Aysha Khan, and Andriy Koval."
+)
+      ,tags$a(href="https://www.hmiscfl.org/","Created by Homeless Service Netwotrk of Central Florida",target="_blank"),
       tags$h3("APR Version"),
       tags$h5("Consistent with Version 1.2 of HUD APR specifications. Updated 11/6/2017.")
+      ,tags$h3("Acknowledgement")
+      ,tags$img(height = 100, width = 200, src="ICAlogo1.png")
+      ,tags$br()
+      ,tags$a(herf = "https://icalliances.org/", "Institute for Community Alliances")
+      ,tags$h5("Original tool created by the Institute for Community Alliances, a not-for-profit organization based in Des Moines, Iowa.
+ICA functions as the HMIS Lead Agency and/or HMIS System Administrator in 11 states. ICA supports data-driven solutions and community information systems that help communities address housing instability, homelessness, food insecurity and related issues.")
    ) # close tabPanel
 ) # close navbarPage
 # ---- server ---------------
 server <- function(input, output) {
-   ds_project_type <- readr::read_csv(config$project_type)
+   ds_project_type <- readr::read_csv("./data-public/metadata/project-type.csv")
    allQuestions <- reactive({
       td <- tempdir()
       unzip(input$aprZip$datapath, exdir=td, overwrite=TRUE)
